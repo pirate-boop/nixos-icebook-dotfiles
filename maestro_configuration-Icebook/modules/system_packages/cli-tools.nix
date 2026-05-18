@@ -25,5 +25,6 @@
     glib
     qdl
     lm_sensors
+    lact
   ];
 }
