@@ -23,7 +23,7 @@
     ./libreoffice.nix
     ./zen-browser.nix
     ./nirimod.nix
-    # ./lfff.nix
+    ./lfff.nix
     ./WaydroiSU.nix
    ./waydroid-extra.nix
   ];
