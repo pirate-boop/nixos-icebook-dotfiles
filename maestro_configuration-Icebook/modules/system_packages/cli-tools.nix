@@ -23,5 +23,6 @@
     exfatprogs
     go-mtpfs
     glib
+    qdl
   ];
 }
