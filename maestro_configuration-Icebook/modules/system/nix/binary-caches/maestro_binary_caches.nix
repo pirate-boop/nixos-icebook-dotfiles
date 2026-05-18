@@ -15,7 +15,7 @@
     ./yazi.nix
     ./chaotic.nix
     ./fufexan.nix
-    # ./helix.nix     # раскомментируй если пишешь в helix
+    ./helix.nix     # раскомментируй если пишешь в helix
     # ./hyprland.nix  # раскомментируй если вернёшься к Hyprland
   ];
 }
