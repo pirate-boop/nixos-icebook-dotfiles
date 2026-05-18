@@ -26,5 +26,7 @@
     qdl
     lm_sensors
     lact
+    vulkan-tools
+    mesa-demos
   ];
 }
