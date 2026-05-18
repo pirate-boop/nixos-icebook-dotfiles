@@ -20,7 +20,9 @@
     # CachyOS ядро (оптимизировано под современное железо)
     # Требует chaotic-nyx overlay в nixpkgs.nix
     # Если chaotic не подключён — заменить на pkgs.linuxPackages_latest
-    kernelPackages = pkgs.linuxPackages_cachyos;
+    # kernelPackages = pkgs.linuxPackages_cachyos;
+    kernelPackages = 
+      pkgs.linuxPackagesFor pkgs.linuxKernel.kernels.linux_zen;
 
     consoleLogLevel = 3;
     kernelParams = [
