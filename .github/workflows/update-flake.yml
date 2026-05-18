@@ -18,6 +18,12 @@ jobs:
         with:
           # Включаем нативный кэш Гитхаба, чтобы сама среда Nix разворачивалась мгновенно
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          nix_print_dev_env: true # Помогает кэшировать окружение самого инсталлятора
+
+      - name: Setup Magic Nix Cache
+        uses: DeterminateSystems/magic-nix-cache-action@v2
+        # Этот экшен перехватывает состояние Nix и мгновенно сохраняет/восстанавливает его 
+        # через внутреннее облако Гитхаба, экономя кучу секунд на инициализации
 
       - name: Setup Cachix
         uses: cachix/cachix-action@v14
