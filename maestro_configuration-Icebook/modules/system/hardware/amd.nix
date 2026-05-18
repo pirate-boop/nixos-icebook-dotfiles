@@ -60,7 +60,7 @@
 
   # Управление питанием (Zen4 — amd-pstate активный режим)
   powerManagement.enable       = true;
-  # powerManagement.cpuFreqGovernor = "schedutil";
+  powerManagement.cpuFreqGovernor = "schedutil";
   services.power-profiles-daemon.enable = true;
   boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
