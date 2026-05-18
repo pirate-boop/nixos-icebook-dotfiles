@@ -24,5 +24,6 @@
     go-mtpfs
     glib
     qdl
+    lm_sensors
   ];
 }
