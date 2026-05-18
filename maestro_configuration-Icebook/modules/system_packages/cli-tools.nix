@@ -1,5 +1,6 @@
 { pkgs, ... }: {
   environment.systemPackages = with pkgs; [
+    gh
     git                      # Distributed version control system
     wget                     # Tool for retrieving files using HTTP, HTTPS, and FTP
     curlFull                 # Command line tool for transferring files with URL syntax
