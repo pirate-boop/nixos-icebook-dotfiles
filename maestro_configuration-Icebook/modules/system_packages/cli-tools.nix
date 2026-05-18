@@ -29,5 +29,6 @@
     lact
     vulkan-tools
     mesa-demos
+    payload_dumper
   ];
 }
