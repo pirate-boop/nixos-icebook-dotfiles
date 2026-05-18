@@ -32,6 +32,31 @@
 
   # Микрокод CPU
   hardware.cpu.amd.updateMicrocode = true;
+  # RDNA3 tweaks
+  boot.kernelParams = [
+
+    # меньше графических артефактов на некоторых ноутбуках
+    "amdgpu.dcdebugmask=0x10"
+
+    # больше shared memory под iGPU
+    "amdgpu.gttsize=8192"
+
+    # чуть лучше latency/input responsiveness
+    "threadirqs"
+  ];
+
+  # Mesa / RADV env vars
+  environment.variables = {
+
+    # async shader compilation
+    RADV_PERFTEST = "gpl,nggc";
+
+    # Wayland
+    MOZ_ENABLE_WAYLAND = "1";
+
+    # Vulkan shader cache
+    AMD_VULKAN_ICD = "RADV";
+  };
 
   # Управление питанием (Zen4 — amd-pstate активный режим)
   powerManagement.enable       = true;
