@@ -1,0 +1,13 @@
+ [opener]
+ edit = [
+  { run = "ghostty -e hx $@", block = false, desc = "helix" }
+ ]
+
+ [open]
+ rules = [
+ { name = "*.nix", use = "edit" },
+ { name = "*.toml", use = "edit" },
+ { name = "*.md", use = "edit" },
+ {mime = "*", use = "edit"}
+]
+

@@ -1,0 +1,46 @@
+{
+  description = "Kori NixOS Config — LAPTOP (Ryzen 7 8845HS + Radeon 780M, Niri + Noctalia)";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    disko.url = "github:nix-community/disko/latest";
+
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    chaotic = {
+      url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs = { self, nixpkgs, home-manager, nur, chaotic, disko, ... }@inputs:
+  {
+    nixosConfigurations.Kori-Icebook = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = { inherit inputs; };
+      modules = [
+        disko.nixosModules.disko
+        ./disko-config.nix
+        { disko.enableConfig = false; }
+        ./configuration.nix
+        chaotic.nixosModules.default
+        home-manager.nixosModules.home-manager
+        {
+          home-manager.useGlobalPkgs    = true;
+          home-manager.useUserPackages  = true;
+          home-manager.extraSpecialArgs = { inherit inputs; };
+          home-manager.users.kori       =
+            ./maestro_configuration-Icebook/modules/home/maestro_home.nix;
+        }
+      ];
+    };
+  };
+}
