@@ -41,7 +41,7 @@
   };
   
   # ── Waydroid (Android контейнер) ────────────────────────────────
-  virtualisation.waydroid.enable = true;
+  # virtualisation.waydroid.enable = true;
   
   # Примечание: boot.kernelParams (iommu и т.д.) НЕ прописываем здесь —
   # на ноутбуке без дискретной GPU VFIO не нужен.
