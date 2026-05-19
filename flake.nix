@@ -13,6 +13,7 @@
     sysc-greet          = { url = "github:Nomadcxx/sysc-greet"; inputs.nixpkgs.follows = "nixpkgs"; };
     lfff                = { url = "github:mrFrok/LibreFastbootFirmwareFlasher"; inputs.nixpkgs.follows = "nixpkgs"; };
     waydroid-script     = { url = "github:casualsnek/waydroid_script"; inputs.nixpkgs.follows = "nixpkgs"; };
+    anime-cursors.url   = "github:pirate-boop/anime-cursors";
   };
 
   outputs = inputs@{ flake-parts, ... }:
