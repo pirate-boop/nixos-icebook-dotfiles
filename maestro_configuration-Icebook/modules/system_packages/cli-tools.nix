@@ -33,32 +33,5 @@
     vulkan-tools
     mesa-demos
     payload_dumper
-    yaziPlugins.gvfs
-    # yaziPlugins.git
-    yaziPlugins.diff
-    yaziPlugins.drag
-    yaziPlugins.glow
-    yaziPlugins.jjui
-    yaziPlugins.nord
-    yaziPlugins.ouch
-    yaziPlugins.sudo
-    yaziPlugins.yafg
-    yaziPlugins.chmod
-    yaziPlugins.dupes
-    yaziPlugins.gitui
-    yaziPlugins.mount
-    yaziPlugins.piper
-    yaziPlugins.rsync
-    yaziPlugins.restore
-    yaziPlugins.yatline
-    yaziPlugins.mime-ext
-    yaziPlugins.bookmarks
-    yaziPlugins.smart-enter
-    yaziPlugins.nav-parent-panel
-    yaziPlugins.close-and-restore-tab
-    yaziPlugins.toggle-pane
-    yaziPlugins.rich-preview
-    yaziPlugins.smart-filter
-    yaziPlugins.wl-clipboard
   ];
 }
