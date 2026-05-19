@@ -12,7 +12,6 @@
     ./portal.nix
     # ./thunar.nix
     ./xconf.nix
-    ./amnezia-vpn.nix
     ./Icebook-suspend.nix
   ];
 }
