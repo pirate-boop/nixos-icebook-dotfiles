@@ -27,11 +27,19 @@
     qdl
     lm_sensors
     lact
+    ripgrep
     vulkan-tools
     mesa-demos
     payload_dumper
     yaziPlugins.gvfs
-    yaziPlugins.git
+    # yaziPlugins.git
     yaziPlugins.diff
+    yaziPlugins.drag
+    yaziPlugins.glow
+    yaziPlugins.jjui
+    yaziPlugins.nord
+    yaziPlugins.ouch
+    yaziPlugins.sudo
+    yaziPlugins.yafg
   ];
 }
