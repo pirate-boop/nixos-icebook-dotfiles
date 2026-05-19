@@ -1,6 +1,7 @@
 { ... }: {
   imports = [
-    ./desktop-program-niri.nix
-    #./desktop-program-hyprland.nix щас он мне будет нахуй не нужон
+    ./amnezia-vpn.nix
+    ./program.yazi.plugins.nix
+    ./zoom-program.nix
   ];
 }
