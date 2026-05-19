@@ -1,7 +1,7 @@
 { ... }: {
   imports = [
     ./udiskie.nix
-    # ./mtp-phone.nix
+    ./mtp-phone-daemon.nix
     ./swayidle.nix
     ./pointerCursor.nix
   ];
