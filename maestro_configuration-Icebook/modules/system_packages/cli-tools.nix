@@ -19,7 +19,7 @@
     udisks2
     libmtp
     android-tools
-    # jmtpfs
+    jmtpfs
     ntfs3g
     exfatprogs
     go-mtpfs
