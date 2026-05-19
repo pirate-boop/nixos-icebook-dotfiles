@@ -18,5 +18,6 @@
     # foot                     # легковесный Wayland терминал
     # kitty                    # быстрый GPU-ускоренный
     ghostty
+    wezterm
   ];
 }
