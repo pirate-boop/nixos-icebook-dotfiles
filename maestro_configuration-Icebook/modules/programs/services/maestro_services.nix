@@ -10,7 +10,6 @@
     ./udisks2.nix
     ./gvfs.nix
     ./portal.nix
-    # ./thunar.nix
     ./xconf.nix
     ./Icebook-suspend.nix
   ];
