@@ -18,6 +18,7 @@
     udiskie
     udisks2
     libmtp
+    simple-mtpfs
     android-tools
     jmtpfs
     ntfs3g
