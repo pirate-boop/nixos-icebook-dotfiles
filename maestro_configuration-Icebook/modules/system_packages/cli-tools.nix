@@ -32,5 +32,6 @@
     payload_dumper
     yaziPlugins.gvfs
     yaziPlugins.git
+    yaziPlugins.diff
   ];
 }
