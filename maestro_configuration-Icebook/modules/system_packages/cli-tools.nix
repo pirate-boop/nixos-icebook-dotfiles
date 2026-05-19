@@ -30,6 +30,7 @@
     vulkan-tools
     mesa-demos
     payload_dumper
-    yaziPlugins.gvfs   
+    yaziPlugins.gvfs
+    yaziPlugins.git
   ];
 }
