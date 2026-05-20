@@ -8,13 +8,24 @@
   '';
 
   systemd.user.services.mtp-automount = {
-    description = "Автоматическое монтирование смартфонов (MTP) через GVFS";
+    description = "Циклический автоклининг и монтирование MTP через GVFS";
+    
     script = ''
-      ${pkgs.coreutils}/bin/sleep 1
+      # 1. Даем полсекунды на стабилизацию порта
+      ${pkgs.coreutils}/bin/sleep 0.5
+
+      # 2. Жёстко вычищаем из GVFS сессии все зависшие «призраки» прошлых подключений
+      # Это решает проблему "Адрес уже примонтирован" при перетыкании шнура
+      ${pkgs.glib}/bin/gio mount -u -f mtp://* 2>/dev/null || true
+
+      # 3. Даем команду на свежее монтирование
       ${pkgs.glib}/bin/gio mount -m
     '';
+
     serviceConfig = {
       Type = "oneshot";
+      # Позволяет службе мгновенно перезапускаться при повторном udev-событии,
+      # полностью стирая из памяти Systemd информацию о том, как завершился прошлый запуск
       RemainAfterExit = false;
     };
   };
