@@ -8,10 +8,10 @@
     code-nautilus
     kdePackages.dolphin    # File manager by KDE
     kdePackages.dolphin-plugins
-    # thunar
-    # thunar-volman        # автомонтирование
-    # thunar-archive-plugin # правый клик → архивы
-    # thunar-media-tags-plugin # теги медиа файлов
-    # thunar-vcs-plugin    # git интеграция
+    thunar
+    thunar-volman        # автомонтирование
+    thunar-archive-plugin # правый клик → архивы
+    thunar-media-tags-plugin # теги медиа файлов
+    thunar-vcs-plugin    # git интеграция
   ];
 }
