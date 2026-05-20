@@ -1,6 +1,6 @@
  [opener]
  edit = [
-  { run = "ghostty -e hx $@", block = false, desc = "helix" }
+  { run = "wezterm -e hx $@", block = false, desc = "helix" }
  ]
 
  [open]
