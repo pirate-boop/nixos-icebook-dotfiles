@@ -8,6 +8,6 @@
     bzip2                    # High-quality data compression program
     xz                       # General-purpose data compression software, successor of LZMA
     file-roller
-    # thunar-archive-plugin
+    thunar-archive-plugin
   ];
 }
