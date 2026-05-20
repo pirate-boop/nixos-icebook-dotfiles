@@ -31,7 +31,7 @@
       "amd_pstate=active"         # активный режим P-State для Zen4 (лучше производительность/батарея)
       "systemd.show_status=auto"
       "rd.udev.log_level=3"
-      "amdgpu.ppfeaturemask=0xfffd7fff"
+      # "amdgpu.ppfeaturemask=0xfffd7fff"
     ];
 
     loader = {
