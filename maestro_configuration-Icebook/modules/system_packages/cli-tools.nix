@@ -28,10 +28,10 @@
     qdl
     lm_sensors
     lact
-    ripgrep
     trash-cli
     vulkan-tools
     mesa-demos
     payload_dumper
+    coreutils
   ];
 }
