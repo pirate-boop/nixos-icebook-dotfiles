@@ -1,0 +1,34 @@
+name: Update Flake Lock
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-lock:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v25
+        with:
+          # Кэшируем сам инсталлятор Nix, чтобы он не качался каждый раз
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          nix_print_dev_env: true
+
+      - name: Setup Magic Nix Cache
+        # Это мгновенно восстанавливает кэш среды, оставляем обязательно
+        uses: DeterminateSystems/magic-nix-cache-action@v2
+
+      - name: Update Flake Lock
+        run: nix flake update
+
+      - name: Commit and Push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update flake.lock via GitHub Actions"
+          file_pattern: 'flake.lock'
