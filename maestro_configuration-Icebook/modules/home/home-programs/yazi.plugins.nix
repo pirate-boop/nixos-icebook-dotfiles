@@ -33,8 +33,15 @@ in
   programs.yazi = {
     enable = true;
     inherit plugins;
-    initLua = builtins.concatStringsSep "\n" (
-      map (name: ''require("${name}"):setup({})'') (builtins.attrNames plugins)
-    );
+
+    initLua = ''
+      local plugins = {${builtins.concatStringsSep ", " (map (n: "\"${n}\"") (builtins.attrNames plugins))}}
+      for _, name in ipairs(plugins) do
+        local ok, mod = pcall(require, name)
+        if ok and mod.setup then
+          mod:setup()
+        end
+      end
+    '';
   };
 }
