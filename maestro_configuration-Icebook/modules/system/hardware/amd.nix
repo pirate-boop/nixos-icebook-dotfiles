@@ -62,7 +62,7 @@
   powerManagement.enable       = true;
   powerManagement.cpuFreqGovernor = "schedutil";
   services.power-profiles-daemon.enable = true;
-  services.lact.enable = true;
+  # services.lact.enable = true;
   boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-amd" ];
