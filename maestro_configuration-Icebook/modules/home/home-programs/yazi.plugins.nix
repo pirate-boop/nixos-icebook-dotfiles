@@ -33,8 +33,17 @@ in
   programs.yazi = {
     enable = true;
     inherit plugins;
-    initLua = builtins.concatStringsSep "\n" (
-      map (name: ''require("${name}"):setup()'') (builtins.attrNames plugins)
-    );
+    initLua = ''
+      -- Безопасная загрузка: вызывает setup() только если он есть
+      local plugin_list = {
+        ${builtins.concatStringsSep ", " (map (n: ''"${n}"'') (builtins.attrNames plugins))}
+      }
+      for _, name in ipairs(plugin_list) do
+        local ok, mod = pcall(require, name)
+        if ok and type(mod) == "table" and type(mod.setup) == "function" then
+          mod:setup()
+        end
+      end
+    '';
   };
 }
