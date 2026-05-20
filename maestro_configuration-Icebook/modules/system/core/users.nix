@@ -22,6 +22,7 @@
       "fuse"
       "users"
       "kvm"
+      "plugdev"
     ];
   };
   #users.users.kori.password = "donatwwww12";
