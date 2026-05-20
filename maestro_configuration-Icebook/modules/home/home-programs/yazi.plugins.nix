@@ -21,7 +21,7 @@ let
     mime-ext = mime-ext;
     bookmarks = bookmarks;
     smart-enter = smart-enter;
-    nav-parent-panel = nav-parent-panel;
+    # nav-parent-panel = nav-parent-panel;
     close-and-restore-tab = close-and-restore-tab;
     toggle-pane = toggle-pane;
     rich-preview = rich-preview;
