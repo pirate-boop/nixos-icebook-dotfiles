@@ -21,7 +21,7 @@ let
     mime-ext = mime-ext;
     bookmarks = bookmarks;
     smart-enter = smart-enter;
-    # nav-parent-panel = nav-parent-panel;
+    nav-parent-panel = nav-parent-panel;
     close-and-restore-tab = close-and-restore-tab;
     toggle-pane = toggle-pane;
     rich-preview = rich-preview;
@@ -38,8 +38,8 @@ in
       local plugins = {${builtins.concatStringsSep ", " (map (n: "\"${n}\"") (builtins.attrNames plugins))}}
       for _, name in ipairs(plugins) do
         local ok, mod = pcall(require, name)
-        if ok and mod.setup then
-          mod:setup()
+        if ok and type(mod.setup) == "function" then
+          pcall(mod.setup, mod, {})
         end
       end
     '';
