@@ -1,16 +1,38 @@
-require("git"):setup { order = 0 }
+-- Базовые плагины
+require("git"):setup()
 require("full-border"):setup()
 require("starship"):setup()
-require("session"):setup {
-    sync_yanked = true,
-}
-require("folder-rules"):setup()
+require("yatline"):setup()
+require("rich-preview"):setup()
 
-require("mactag"):setup {
-    keys = {
-        r = "Red", o = "Orange", y = "Yellow", g = "Green", b = "Blue", p = "Purple",
-    },
-    colors = {
-        Red = "#ee7b70", Orange = "#f5bd5c", Yellow = "#fbe764", Green = "#91fc87", Blue = "#5fa3f8", Purple = "#cb88f8",
-    },
-}
+-- Плагины управления и утилиты
+require("session"):setup { sync_yanked = true }
+require("folder-rules"):setup()
+require("bookmarks"):setup()
+require("smart-enter"):setup()
+require("mime-ext"):setup()
+require("wl-clipboard"):setup()
+
+-- Плагины смены поведения
+require("nav-parent-panel"):setup()
+require("close-and-restore-tab"):setup()
+require("toggle-pane"):setup()
+require("smart-filter"):setup()
+
+-- Плагины монтирования и действий
+require("gvfs"):setup()
+require("mount"):setup()
+require("yafg"):setup()
+require("sudo"):setup()
+require("chmod"):setup()
+require("dupes"):setup()
+require("rsync"):setup()
+require("restore"):setup()
+require("piper"):setup()
+require("ouch"):setup()
+require("gitui"):setup()
+require("diff"):setup()
+require("drag"):setup()
+require("glow"):setup()
+require("jjui"):setup()
+require("nord"):setup()
