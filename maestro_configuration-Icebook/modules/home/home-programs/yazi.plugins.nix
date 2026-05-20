@@ -32,7 +32,6 @@
       wl-clipboard = wl-clipboard;
     };
 
-    # Автоматически генерирует init.lua для каждого плагина
     initLua = builtins.concatStringsSep "\n" (
       map (name: ''require("${name}"):setup()'') (builtins.attrNames plugins)
     );
