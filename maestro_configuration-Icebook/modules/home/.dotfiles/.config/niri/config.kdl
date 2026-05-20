@@ -886,7 +886,7 @@ binds {
     Mod+Shift+P { power-off-monitors; }
     Mod+M { spawn "pear-desktop"; }
     Mod+X { toggle-overview; }
-    Mod+E { spawn "nautilus"; }
+    Mod+E { spawn "thunar"; }
     Mod+Z { spawn "AyuGram"; }
     Mod+Space { switch-layout "next"; }
     Mod+S { spawn "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
