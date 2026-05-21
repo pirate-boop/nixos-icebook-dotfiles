@@ -2,10 +2,9 @@
   # Включаем системный демон Flatpak
   services.flatpak.enable = true;
 
-  # Базовые утилиты и графический магазин
+  # Базовые утилиты и графический магазин (убрали несуществующий flatseal)
   environment.systemPackages = with pkgs; [
     flatpak
-    flatseal        # Графический редактор прав
     gnome-software  # Графический магазин приложений
   ];
 
