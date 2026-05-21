@@ -12,5 +12,5 @@
   programs.gamescope.enable = true;
   programs.gamemode.enable = true;
   programs.xwayland.enable = true;
-  services.xserver.enable = true;
+  # services.xserver.enable = true;
 }
