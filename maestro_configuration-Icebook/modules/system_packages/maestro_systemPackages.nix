@@ -26,6 +26,6 @@
     ./lfff.nix
     ./WaydroiSU.nix
    ./waydroid-extra.nix
-   ./flatpak.nix
+   #./flatpak.nix
   ];
 }
