@@ -5,7 +5,8 @@
   # Базовые утилиты и графический магазин
   environment.systemPackages = with pkgs; [
     flatpak
-    gnome-software  # Графический магазин приложений
+    bazaar
+    # gnome-software  # Графический магазин приложений
   ];
 
   # Блок xdg.portal полностью удален, так как он декларативно
