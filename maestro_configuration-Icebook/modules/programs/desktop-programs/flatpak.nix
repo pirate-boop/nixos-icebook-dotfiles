@@ -2,21 +2,14 @@
   # Включаем системный демон Flatpak
   services.flatpak.enable = true;
 
-  # Базовые утилиты и графический магазин (убрали несуществующий flatseal)
+  # Базовые утилиты и графический магазин
   environment.systemPackages = with pkgs; [
     flatpak
     gnome-software  # Графический магазин приложений
   ];
 
-  # Порталы для корректной работы под Wayland/Niri
-  xdg.portal = {
-    enable = true;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-gtk
-      xdg-desktop-portal-wlr
-    ];
-    config.common.default = "*";
-  };
+  # Блок xdg.portal полностью удален, так как он декларативно
+  # настроен в твоем модуле modules/programs/services/portal.nix
 
   # Декларативное добавление ВСЕХ основных репозиториев
   systemd.services.configure-flatpak-repos = {
