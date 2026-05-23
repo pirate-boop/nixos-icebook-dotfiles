@@ -1,82 +1,57 @@
-{ pkgs, lib, ... }:
+{ pkgs, ... }:
 
 {
+  # =========================================================================
+  # 1. СТЕК РАЗРАБОТКИ RUST (Нативный для NixOS)
+  # =========================================================================
   home.packages = with pkgs; [
-    # ─────────────
-    # Rust toolchain
-    # ─────────────
-    rustup
-    rust-analyzer
+    # Официальный стабильный компилятор и сборщик из nixpkgs
+    rustc
+    cargo
+    rust-analyzer          # Обязательно для автокомплита в Zed
 
-    # ─────────────
-    # Linker / compiler
-    # ─────────────
+    # Быстрые линкеры
     clang
     lld
     mold
 
-    # ─────────────
-    # Build dependencies
-    # ─────────────
-    pkg-config
-    openssl
-    sqlite
-    zlib
+    # Утилиты Cargo для удобства разработки
+    bacon                  # Запускает проверку кода в фоне
+    cargo-edit             # Добавляет команду 'cargo add'
+    cargo-watch            # Перезапускает проект при изменении файлов
+    cargo-expand           # Показывает результат макросов
+    cargo-nextest          # Сверхбыстрый запуск тестов
+    cargo-audit            # Проверка зависимостей на уязвимости
+    cargo-outdated         # Проверка устаревших пакетов
+    cargo-deny             # Проверка лицензий и дубликатов
 
-    # ─────────────
-    # Cargo utilities
-    # ─────────────
-    bacon
-    cargo-edit
-    cargo-watch
-    cargo-expand
-    cargo-nextest
-    cargo-audit
-    cargo-outdated
-    cargo-deny
-
-    # ─────────────
-    # Debugging / profiling
-    # ─────────────
+    # Отладка и бенчмарки
     gdb
     lldb
-    hyperfine
+    hyperfine              # Замер скорости выполнения программ
+    cargo-flamegraph       # Визуализация узких мест в коде
 
-    # flamegraph support
-    cargo-flamegraph
-    linuxPackages.perf
-
-    # ─────────────
-    # Extra useful tools
-    # ─────────────
-    just
-    jq
-    ripgrep
-    fd
-    eza
+    # Системные инструменты разработки
+    just                   # Современная замена make
+    jq                     # Парсер JSON для консоли
+    fd                     # Быстрый поиск файлов (замена find)
+    eza                    # Красивый вывод списков файлов (замена ls)
   ];
 
-  # ─────────────
-  # Rust environment
-  # ─────────────
+  # =========================================================================
+  # 2. НАСТРОЙКИ ОКРУЖЕНИЯ (Под твой WezTerm и Zed)
+  # =========================================================================
   home.sessionVariables = {
-    EDITOR = "hx";
+    EDITOR = "zeditor";    # Выставляем твой актуальный редактор Zed
 
-    # faster linking
+    # Настройка линкера для максимальной скорости компиляции
     RUSTFLAGS = "-C link-arg=-fuse-ld=mold";
-
-    # use clang linker
     CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER = "clang";
   };
 
-  # ─────────────
-  # Rust projects workspace
-  # ─────────────
-  home.file."development/rust-projects/.gitkeep".text = "";
-
-  # ─────────────
-  # Cargo config
-  # ─────────────
+  # =========================================================================
+  # 3. ГЛОБАЛЬНЫЙ КОНФИГ CARGO
+  # =========================================================================
   xdg.configFile."cargo/config.toml".text = ''
     [build]
     rustflags = ["-C", "link-arg=-fuse-ld=mold"]
@@ -88,9 +63,11 @@
     verbose = false
   '';
 
-  # ─────────────
-  # Direnv support
-  # ─────────────
+  # =========================================================================
+  # 4. АВТОМАТИЧЕСКИЙ ВОРКСПЕЙС И DIRENV
+  # =========================================================================
+  home.file."development/rust-projects/.gitkeep".text = "";
+
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
