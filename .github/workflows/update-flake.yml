@@ -3,7 +3,11 @@ name: Update Flake Lock
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 3 * * 0" # Каждое воскресенье в 03:00 UTC
+    - cron: "0 3 * * 0"
+
+# ВОТ ЭТОТ БЛОК заставит GitHub Actions заткнуться и принудительно включит Node 24
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
 permissions:
   contents: write
@@ -22,11 +26,9 @@ jobs:
       - name: Setup Magic Nix Cache
         uses: DeterminateSystems/magic-nix-cache-action@v2
 
-      # Проверяем синтаксис флейка ДО обновления лок-файла
       - name: Pre-check flake
         run: nix flake check --no-build
 
-      # ИМЯ ИСПРАВЛЕНО: просто update-flake-lock, без "-action"
       - name: Update flake.lock
         uses: DeterminateSystems/update-flake-lock@v21
         with:
