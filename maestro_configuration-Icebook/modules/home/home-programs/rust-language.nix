@@ -14,7 +14,7 @@
     cargo-audit      # Audit Cargo.lock files for crates with security vulnerabilities
     cargo-nextest    # Next-generation test runner for Rust projects
     cargo-expand     # Cargo subcommand to show result of macro expansion
-    rustup
+    rustup           # Rust toolchain installer
     rust-analyzer    # Языковой сервер (LSP) — выдает подсказки и автокомплит в редакторах
     rustfmt          # Утилита для автоматического форматирования кода по стандартам
     clippy           # Официальный продвинутый линтер (подсказывает, как улучшить код)
