@@ -1,7 +1,7 @@
 name: Update Flake Lock
 
 on:
-  workflow_dispatch: # Оставляем кнопку ручного запуска
+  workflow_dispatch:
   schedule:
     - cron: "0 3 * * 0" # Каждое воскресенье в 03:00 UTC
 
@@ -17,24 +17,23 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v4
+        uses: determinate-systems/nix-installer-action@v4
 
       - name: Setup Magic Nix Cache
-        uses: DeterminateSystems/magic-nix-cache-action@v2
+        uses: determinate-systems/magic-nix-cache-action@v2
 
-      # Запускаем быструю проверку флейка ДО обновления, чтобы убедиться, что репа вообще здорова
+      # Проверяем синтаксис флейка ДО обновления лок-файла
       - name: Pre-check flake
         run: nix flake check --no-build
 
-      # Обновляем лок-файл и создаем красивый Pull Request
+      # Теперь гитхаб его найдет и обновит указанные инпуты
       - name: Update flake.lock
-        uses: DeterminateSystems/update-flake-lock-action@v21
+        uses: determinate-systems/update-flake-lock-action@v21
         with:
           commit-msg: "chore(flake): update system inputs"
           pr-title: "🔄 Flake.lock: Weekly Inputs Update"
           pr-labels: |
             dependencies
             automated
-          # ХИТРОСТЬ: Обновляем только основные базы. Если хочешь обновлять ВСЕ, просто удали строчку ниже.
           inputs: "nixpkgs home-manager" 
           token: ${{ secrets.GITHUB_TOKEN }}
