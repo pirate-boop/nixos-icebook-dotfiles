@@ -9,5 +9,6 @@
     ./boot.nix
     ./security.nix
     ./users.nix
+    ./performance.nix
   ];
 }
