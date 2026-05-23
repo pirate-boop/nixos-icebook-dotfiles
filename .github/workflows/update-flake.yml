@@ -37,5 +37,5 @@ jobs:
           pr-labels: |
             dependencies
             automated
-          inputs: "nixpkgs home-manager" 
+          #inputs: "nixpkgs home-manager" 
           token: ${{ secrets.GITHUB_TOKEN }}
