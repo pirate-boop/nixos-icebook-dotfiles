@@ -6,13 +6,14 @@
   # =========================================================================
   home.packages = with pkgs; [
     rust-src         #
-    rustc            # Сам компилятор Rust
+    rust-motd        # Beautiful, useful MOTD generation with zero runtime dependencies
+    rustc            # Safe, concurrent, practical language (wrapper script)
     cargo            # Пакетный менеджер, сборщик и генератор проектов
-    cargo-edit       #
-    cargo-watch      #
-    cargo-audit      #
-    cargo-nextest    #
-    cargo-expand     #
+    cargo-edit       # Utility for managing cargo dependencies from the command line
+    cargo-watch      # Cargo subcommand for watching over Cargo project's source
+    cargo-audit      # Audit Cargo.lock files for crates with security vulnerabilities
+    cargo-nextest    # Next-generation test runner for Rust projects
+    cargo-expand     # Cargo subcommand to show result of macro expansion
     rustup
     rust-analyzer    # Языковой сервер (LSP) — выдает подсказки и автокомплит в редакторах
     rustfmt          # Утилита для автоматического форматирования кода по стандартам
