@@ -26,9 +26,9 @@ jobs:
       - name: Pre-check flake
         run: nix flake check --no-build
 
-      # Обновляем указанные инпуты и создаем Pull Request
+      # ИМЯ ИСПРАВЛЕНО: просто update-flake-lock, без "-action"
       - name: Update flake.lock
-        uses: DeterminateSystems/update-flake-lock-action@v21
+        uses: DeterminateSystems/update-flake-lock@v21
         with:
           commit-msg: "chore(flake): update system inputs"
           pr-title: "🔄 Flake.lock: Weekly Inputs Update"
