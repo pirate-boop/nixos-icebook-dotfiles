@@ -21,7 +21,7 @@
     ./network_security.nix
     ./vpn_clients.nix
     ./libreoffice.nix
-    ./zen-browser.nix
+    #./zen-browser.nix
     ./nirimod.nix
     ./lfff.nix
     ./WaydroiSU.nix
