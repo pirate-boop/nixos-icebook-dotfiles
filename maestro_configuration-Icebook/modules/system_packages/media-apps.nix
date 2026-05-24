@@ -14,7 +14,9 @@
     pavucontrol       # PulseAudio/PipeWire GUI
     easyeffects       # эффекты звука
     amberol
-
+    komikku
+    mangayomi
+    
     # ── Загрузка ──────────────────────────────────
     yt-dlp            # скачать видео/аудио с YouTube и др.
     aria2             # мощный мультипротокольный downloader
