@@ -10,5 +10,6 @@
     ./security.nix
     ./users.nix
     ./performance.nix
+    ./bootloader.nix
   ];
 }
