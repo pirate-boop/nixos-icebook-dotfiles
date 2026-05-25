@@ -6,5 +6,6 @@
     ./starship.nix
     ./hyprlock.nix
     ./yazi.plugins.nix
+    ./rust-language.nix
   ];
 }
