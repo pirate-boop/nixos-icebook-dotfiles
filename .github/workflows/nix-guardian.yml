@@ -1,0 +1,630 @@
+name: Nix Guardian
+
+on:
+  push:
+  pull_request:
+
+########################################################
+# JOBS:
+#   validate         — быстрые статические проверки
+#   bootloader-safety — GRUB/UUID/initrd/brick prevention
+#   build            — реальная сборка (только push)
+########################################################
+
+jobs:
+
+  ############################################################
+  # JOB 1: STATIC VALIDATION
+  ############################################################
+
+  validate:
+    name: Static Validation
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            accept-flake-config = true
+
+      # Бинарный кэш — без него каждый push пересобирает всё с нуля
+      # Для публичного кэша authToken не нужен (только чтение)
+      # Для записи: добавь CACHIX_AUTH_TOKEN в Settings → Secrets
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v15
+        with:
+          name: nix-community
+          # authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
+      ########################################################
+      # FLAKE CHECK (без сборки — только eval)
+      ########################################################
+
+      - name: Flake check (no build)
+        run: |
+          nix flake check \
+            --no-build \
+            --show-trace
+
+      ########################################################
+      # NIX SYNTAX PARSE
+      # NOTE: FAILED в subshell pipe не работает — используем
+      # process substitution < <(find ...) чтобы FAILED
+      # был в том же процессе что и exit $FAILED
+      ########################################################
+
+      - name: Parse all nix files
+        run: |
+          FAILED=0
+
+          while IFS= read -r -d '' file; do
+            echo "Parsing $file"
+            if ! nix-instantiate --parse "$file" >/dev/null 2>&1; then
+              echo "::error file=$file::Parse failed"
+              FAILED=1
+            fi
+          done < <(find . -name "*.nix" -print0)
+
+          exit $FAILED
+
+      ########################################################
+      # NIRI CONFIG VALIDATION
+      # Проверяет все config.kdl в *niri* путях
+      ########################################################
+
+      - name: Validate all Niri configs
+        run: |
+          FAILED=0
+
+          while IFS= read -r -d '' file; do
+            echo "::group::Validating $file"
+
+            if ! nix shell github:sodiboo/niri-flake#niri-stable \
+              -c niri validate -c "$file" 2>&1
+            then
+              echo "::error file=$file::Niri config validation failed"
+              FAILED=1
+            fi
+
+            echo "::endgroup::"
+          done < <(find . -path "*niri*" -name "config.kdl" -print0)
+
+          exit $FAILED
+
+      ########################################################
+      # SHELLCHECK
+      # Та же проблема subshell — фикс через < <(find ...)
+      ########################################################
+
+      - name: Run shellcheck
+        run: |
+          nix shell nixpkgs#shellcheck -c bash -c '
+          FAILED=0
+
+          while IFS= read -r -d "" file; do
+            echo "::group::Shellcheck $file"
+
+            if ! shellcheck "$file"; then
+              echo "::error file=$file::Shellcheck failed"
+              FAILED=1
+            fi
+
+            echo "::endgroup::"
+          done < <(find . -type f \( -name "*.sh" -o -name "*.bash" \) -print0)
+
+          exit $FAILED
+          '
+
+      ########################################################
+      # NIX FORMAT CHECK (alejandra)
+      ########################################################
+
+      - name: Check formatting
+        run: |
+          nix shell nixpkgs#alejandra -c bash -c '
+          FAILED=0
+
+          while IFS= read -r -d "" file; do
+            echo "Checking format: $file"
+
+            if ! alejandra --check "$file" 2>&1; then
+              echo "::error file=$file::Formatting check failed"
+              FAILED=1
+            fi
+          done < <(find . -name "*.nix" -print0)
+
+          exit $FAILED
+          '
+
+      ########################################################
+      # BROKEN SYMLINKS
+      # Исключаем абсолютные symlink — в CI они всегда broken
+      # (нет /nix/store, нет домашней директории и т.д.)
+      ########################################################
+
+      - name: Check broken symlinks (relative only)
+        run: |
+          FAILED=0
+
+          while IFS= read -r -d '' link; do
+            target=$(readlink "$link")
+            # Пропускаем абсолютные пути (/nix/store, /run, /etc...)
+            if [[ "$target" == /* ]]; then
+              continue
+            fi
+            echo "::error file=$link::Broken relative symlink → $target"
+            FAILED=1
+          done < <(find . -xtype l -not -path "./.git/*" -print0)
+
+          exit $FAILED
+
+
+  ############################################################
+  # JOB 2: BOOTLOADER SAFETY
+  # Запускается параллельно с validate.
+  # Спасает от: кирпича, kernel panic, неправильного диска,
+  # конфликта загрузчиков, initrd без нужных модулей.
+  ############################################################
+
+  bootloader-safety:
+    name: Bootloader Safety Checks
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            accept-flake-config = true
+
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v15
+        with:
+          name: nix-community
+
+      ########################################################
+      # [GRUB] Конфликт загрузчиков
+      # grub.enable = true + systemd-boot.enable = true
+      # → NixOS упадёт при сборке, но лучше поймать раньше
+      ########################################################
+
+      - name: Check bootloader conflict (GRUB vs systemd-boot)
+        run: |
+          GRUB=$(grep -rn 'boot\.loader\.grub\.enable\s*=\s*true' \
+            --include="*.nix" . || true)
+          SYSD=$(grep -rn 'boot\.loader\.systemd-boot\.enable\s*=\s*true' \
+            --include="*.nix" . || true)
+
+          if [ -n "$GRUB" ] && [ -n "$SYSD" ]; then
+            echo "::error::КОНФЛИКТ: одновременно включены GRUB и systemd-boot!"
+            echo ""
+            echo "GRUB найден в:"
+            echo "$GRUB"
+            echo ""
+            echo "systemd-boot найден в:"
+            echo "$SYSD"
+            exit 1
+          fi
+
+          if [ -n "$GRUB" ]; then
+            echo "✓ Bootloader: GRUB"
+          elif [ -n "$SYSD" ]; then
+            echo "✓ Bootloader: systemd-boot"
+          else
+            echo "::warning::Bootloader не найден — возможно вынесен в hardware-configuration.nix"
+          fi
+
+      ########################################################
+      # [GRUB] grub.device — диск, а не раздел
+      # Одна из самых частых причин кирпича:
+      # grub.device = "/dev/sda1" вместо "/dev/sda"
+      # grub.device = "/dev/nvme0n1p1" вместо "/dev/nvme0n1"
+      ########################################################
+
+      - name: Check GRUB device is disk, not partition
+        run: |
+          FAILED=0
+
+          while IFS= read -r line; do
+            DEVICE=$(echo "$line" | grep -oP '"\K/dev/[^"]+(?=")' | head -1)
+
+            [ -z "$DEVICE" ] && continue
+            [ "$DEVICE" = "nodev" ] && continue
+
+            # Паттерны разделов: sda1, nvme0n1p1, vda1, hda1
+            if echo "$DEVICE" | grep -qP \
+              '^/dev/(sd[a-z][0-9]+|nvme[0-9]+n[0-9]+p[0-9]+|vd[a-z][0-9]+|hd[a-z][0-9]+)$'
+            then
+              echo "::error::grub.device = \"$DEVICE\" — это РАЗДЕЛ, а не диск!"
+              echo "  Нужно: /dev/sda или /dev/nvme0n1"
+              echo "  Найдено: $line"
+              FAILED=1
+            else
+              echo "✓ grub.device = $DEVICE (похоже на диск)"
+            fi
+          done < <(grep -rn 'boot\.loader\.grub\.device\s*=' --include="*.nix" . || true)
+
+          exit $FAILED
+
+      ########################################################
+      # [GRUB] EFI consistency
+      # Если efiSupport = true → device должен быть "nodev"
+      # Если efiSupport = true → efiSysMountPoint должен быть задан
+      # Если efiSupport = false (BIOS) → device НЕ должен быть "nodev"
+      ########################################################
+
+      - name: Check GRUB EFI consistency
+        run: |
+          GRUB_ENABLED=$(grep -rn 'boot\.loader\.grub\.enable\s*=\s*true' \
+            --include="*.nix" . || true)
+          [ -z "$GRUB_ENABLED" ] && echo "GRUB не включён, пропускаем" && exit 0
+
+          FAILED=0
+          EFI_SUPPORT=$(grep -rn 'boot\.loader\.grub\.efiSupport\s*=\s*true' \
+            --include="*.nix" . || true)
+          EFI_MOUNT=$(grep -rn 'boot\.loader\.efi\.efiSysMountPoint\s*=' \
+            --include="*.nix" . || true)
+          NODEV=$(grep -rn 'boot\.loader\.grub\.device\s*=\s*"nodev"' \
+            --include="*.nix" . || true)
+
+          if [ -n "$EFI_SUPPORT" ]; then
+            echo "Режим: GRUB + EFI"
+
+            if [ -z "$EFI_MOUNT" ]; then
+              echo "::error::efiSupport=true но efiSysMountPoint не задан!"
+              echo "  Добавь: boot.loader.efi.efiSysMountPoint = \"/boot\";"
+              FAILED=1
+            else
+              echo "✓ efiSysMountPoint задан"
+            fi
+
+            if [ -z "$NODEV" ]; then
+              echo "::error::efiSupport=true требует grub.device = \"nodev\""
+              FAILED=1
+            else
+              echo "✓ grub.device = nodev (корректно для EFI)"
+            fi
+
+          else
+            echo "Режим: GRUB + BIOS"
+
+            if [ -n "$NODEV" ]; then
+              echo "::error::grub.device = \"nodev\" но efiSupport не включён!"
+              echo "  GRUB не знает куда устанавливаться — кирпич!"
+              FAILED=1
+            fi
+          fi
+
+          exit $FAILED
+
+      ########################################################
+      # [GRUB] Версия загрузчика
+      # grub.version = 1 не поддерживается в NixOS
+      ########################################################
+
+      - name: Check GRUB version
+        run: |
+          BAD_VER=$(grep -rn 'boot\.loader\.grub\.version\s*=\s*1' \
+            --include="*.nix" . || true)
+          if [ -n "$BAD_VER" ]; then
+            echo "::error::boot.loader.grub.version = 1 не поддерживается в NixOS!"
+            echo "$BAD_VER"
+            exit 1
+          fi
+          echo "✓ Версия GRUB в порядке"
+
+      ########################################################
+      # [GRUB] Минимальный install target
+      # GRUB включён но не указан ни device ни efiSysMountPoint
+      # → grub-install упадёт с непонятной ошибкой
+      ########################################################
+
+      - name: Check GRUB has install target
+        run: |
+          GRUB_ENABLED=$(grep -rn 'boot\.loader\.grub\.enable\s*=\s*true' \
+            --include="*.nix" . || true)
+          [ -z "$GRUB_ENABLED" ] && echo "GRUB не включён, пропускаем" && exit 0
+
+          DEVICE=$(grep -rn 'boot\.loader\.grub\.device\s*=' \
+            --include="*.nix" . || true)
+          EFI_MOUNT=$(grep -rn 'boot\.loader\.efi\.efiSysMountPoint\s*=' \
+            --include="*.nix" . || true)
+
+          if [ -z "$DEVICE" ] && [ -z "$EFI_MOUNT" ]; then
+            echo "::error::GRUB включён но не задан ни grub.device ни efiSysMountPoint!"
+            echo "  grub-install не знает куда ставить загрузчик → кирпич!"
+            exit 1
+          fi
+
+          echo "✓ GRUB install target задан"
+
+      ########################################################
+      # [UUID] Формат дисковых UUID
+      # Неверный UUID в fileSystems → корень не монтируется
+      # → kernel panic "Unable to mount root fs"
+      ########################################################
+
+      - name: Validate disk UUID formats
+        run: |
+          FAILED=0
+          UUID_RE='[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}'
+
+          while IFS= read -r line; do
+            while IFS= read -r uuid; do
+              if [ ${#uuid} -ne 36 ]; then
+                echo "::error::Неверная длина UUID: '$uuid' (${#uuid} символов, нужно 36)"
+                echo "  Контекст: $line"
+                FAILED=1
+              else
+                echo "✓ UUID ok: $uuid"
+              fi
+            done < <(echo "$line" | grep -oP "$UUID_RE" || true)
+          done < <(grep -rn -i 'by-uuid\|device.*uuid\|uuid.*device' \
+            --include="*.nix" . || true)
+
+          exit $FAILED
+
+      ########################################################
+      # [initrd] Модули файловых систем
+      # Если корень на btrfs/xfs но модуль не в initrd
+      # → kernel panic при загрузке (не может смонтировать /)
+      ########################################################
+
+      - name: Check initrd has required filesystem modules
+        run: |
+          FAILED=0
+
+          # --- btrfs ---
+          BTRFS_FS=$(grep -rn 'fsType\s*=\s*"btrfs"' --include="*.nix" . || true)
+          if [ -n "$BTRFS_FS" ]; then
+            echo "Обнаружена btrfs ФС"
+            BTRFS_MOD=$(grep -rn '"btrfs"' --include="*.nix" . | \
+              grep -i 'kernelModules\|availableKernelModules\|initrd' || true)
+            if [ -z "$BTRFS_MOD" ]; then
+              echo "::error::btrfs используется как ФС но модуль не найден в initrd/kernelModules!"
+              echo "  Добавь в hardware-configuration.nix:"
+              echo "  boot.initrd.availableKernelModules = [ \"btrfs\" ];"
+              FAILED=1
+            else
+              echo "✓ btrfs модуль присутствует"
+            fi
+          fi
+
+          # --- xfs ---
+          XFS_FS=$(grep -rn 'fsType\s*=\s*"xfs"' --include="*.nix" . || true)
+          if [ -n "$XFS_FS" ]; then
+            XFS_MOD=$(grep -rn '"xfs"' --include="*.nix" . | \
+              grep -i 'kernelModules\|availableKernelModules\|initrd' || true)
+            if [ -z "$XFS_MOD" ]; then
+              echo "::warning::xfs ФС обнаружена но модуль не найден в initrd — возможен kernel panic"
+            else
+              echo "✓ xfs модуль присутствует"
+            fi
+          fi
+
+          # --- LUKS ---
+          LUKS=$(grep -rn 'boot\.initrd\.luks\|cryptsetup' --include="*.nix" . || true)
+          if [ -n "$LUKS" ]; then
+            echo "Обнаружен LUKS"
+            LUKS_MOD=$(grep -rn 'dm.crypt\|dm_crypt\|aes\b' --include="*.nix" . | \
+              grep -i 'kernelModules\|initrd' || true)
+            if [ -z "$LUKS_MOD" ]; then
+              echo "::warning::LUKS используется — убедись что dm-crypt модули в initrd"
+            else
+              echo "✓ LUKS модули найдены"
+            fi
+          fi
+
+          exit $FAILED
+
+      ########################################################
+      # [initrd] Модули NVMe/SATA
+      # Без них корень на NVMe не монтируется в initrd
+      ########################################################
+
+      - name: Check initrd storage controller modules
+        run: |
+          # Ищем устройства вида /dev/nvme* или /dev/sd* в fileSystems
+          NVME_DEV=$(grep -rn '"/dev/nvme' --include="*.nix" . || true)
+          SATA_DEV=$(grep -rn '"/dev/sd' --include="*.nix" . || true)
+
+          if [ -n "$NVME_DEV" ]; then
+            echo "Обнаружен NVMe диск"
+            NVME_MOD=$(grep -rn '"nvme"' --include="*.nix" . | \
+              grep -i 'kernelModules\|availableKernelModules\|initrd' || true)
+            if [ -z "$NVME_MOD" ]; then
+              echo "::warning::NVMe устройство используется но модуль 'nvme' не найден в initrd"
+              echo "  Обычно NixOS добавляет его автоматически через hardware-configuration.nix"
+            else
+              echo "✓ nvme модуль найден"
+            fi
+          fi
+
+          if [ -n "$SATA_DEV" ]; then
+            echo "Обнаружен SATA/SCSI диск"
+            AHCI_MOD=$(grep -rn '"ahci"\|"sd_mod"' --include="*.nix" . | \
+              grep -i 'kernelModules\|availableKernelModules\|initrd' || true)
+            if [ -z "$AHCI_MOD" ]; then
+              echo "::warning::SATA устройство используется но ahci/sd_mod не найдены в initrd"
+            else
+              echo "✓ SATA модули найдены"
+            fi
+          fi
+
+      ########################################################
+      # [MIGRATION] systemd-boot → GRUB
+      # Не блокирует, но выводит чеклист для безопасной миграции
+      ########################################################
+
+      - name: Migration safety notice (systemd-boot → GRUB)
+        run: |
+          GRUB=$(grep -rn 'boot\.loader\.grub\.enable\s*=\s*true' \
+            --include="*.nix" . || true)
+          SYSD=$(grep -rn 'boot\.loader\.systemd-boot\.enable\s*=\s*true' \
+            --include="*.nix" . || true)
+
+          # Только если GRUB включён а systemd-boot - нет
+          if [ -n "$GRUB" ] && [ -z "$SYSD" ]; then
+            echo "::notice::Обнаружена конфигурация с GRUB (systemd-boot отсутствует)"
+            echo ""
+            echo "════════════════════════════════════════════════════"
+            echo "  ЧЕКЛИСТ МИГРАЦИИ systemd-boot → GRUB"
+            echo "════════════════════════════════════════════════════"
+            echo ""
+            echo "  Перед nixos-rebuild switch:"
+            echo "  □ /boot смонтирован как vfat (EFI раздел)"
+            echo "  □ grub.efiSupport = true (если UEFI система)"
+            echo "  □ grub.device = \"nodev\" (при EFI)"
+            echo "  □ efiSysMountPoint = \"/boot\" задан"
+            echo "  □ Есть загрузочная USB на случай отката"
+            echo ""
+            echo "  После nixos-rebuild switch:"
+            echo "  □ sudo grub-install (если не запустился автоматически)"
+            echo "  □ Проверить: ls /boot/EFI/ → должен быть nixos/"
+            echo "  □ Проверить: sudo grub-mkconfig (убедиться что ядро найдено)"
+            echo ""
+            echo "  Откат при проблемах (с LiveUSB):"
+            echo "  □ nixos-enter --root /mnt"
+            echo "  □ nix-env -p /nix/var/nix/profiles/system --rollback"
+            echo "  □ /nix/var/nix/profiles/system/bin/switch-to-configuration switch"
+            echo "════════════════════════════════════════════════════"
+          fi
+
+
+  ############################################################
+  # JOB 3: ACTUAL BUILD
+  # Запускается только после validate + bootloader-safety
+  # Только на push (не на PR — слишком долго)
+  # Матрица хостов: MY-PC и NIXDECK
+  ############################################################
+
+  build:
+    name: Build — ${{ matrix.host }}
+    runs-on: ubuntu-latest
+    needs: [validate, bootloader-safety]
+    if: github.event_name == 'push'
+
+    strategy:
+      matrix:
+        host: [MY-PC, NIXDECK]
+      fail-fast: false  # Падение MY-PC не отменяет NIXDECK
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            accept-flake-config = true
+
+      # При наличии CACHIX_AUTH_TOKEN — результаты сборки
+      # кэшируются и следующий push не пересобирает всё с нуля
+      - name: Setup Cachix (with push)
+        uses: cachix/cachix-action@v15
+        with:
+          name: nix-community
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+          # Не пушим исходники, только бинарники
+          pushFilter: '-source$'
+
+      ########################################################
+      # Реальная сборка system.build.toplevel
+      # --no-link — не создаёт result/ симлинк
+      # --print-build-logs — видим что происходит
+      ########################################################
+
+      - name: Build ${{ matrix.host }}
+        run: |
+          nix build \
+            .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel \
+            --no-link \
+            --show-trace \
+            --print-build-logs
+
+      ########################################################
+      # Размер closure
+      # Предупреждаем если система внезапно распухла
+      ########################################################
+
+      - name: Report closure size
+        if: success()
+        run: |
+          STORE_PATH=$(nix path-info \
+            .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel \
+            2>/dev/null || true)
+
+          if [ -z "$STORE_PATH" ]; then
+            echo "Не удалось получить store path, пропускаем"
+            exit 0
+          fi
+
+          SIZE_BYTES=$(nix path-info --closure-size "$STORE_PATH" 2>/dev/null \
+            | awk '{print $2}' | tail -1 || echo 0)
+          SIZE_GB=$(awk "BEGIN {printf \"%.2f\", $SIZE_BYTES / 1073741824}")
+
+          echo "Closure size [${{ matrix.host }}]: ${SIZE_GB} GB"
+
+          # Предупреждение если больше 15GB (обычно что-то пошло не так)
+          if awk "BEGIN {exit !($SIZE_BYTES > 16106127360)}"; then
+            echo "::warning::Closure ${{ matrix.host }} = ${SIZE_GB}GB — это много, проверь зависимости"
+          fi
+
+      ########################################################
+      # Проверка что runtime конфиг не сломан:
+      # evalируем критические опции после успешной сборки
+      ########################################################
+
+      - name: Eval critical runtime options
+        if: success()
+        run: |
+          FAILED=0
+          HOST="${{ matrix.host }}"
+
+          eval_opt() {
+            local opt="$1"
+            local result
+            result=$(nix eval ".#nixosConfigurations.${HOST}.config.${opt}" \
+              --json 2>/dev/null || echo "null")
+            echo "$opt = $result"
+            echo "$result"
+          }
+
+          # Hostname должен быть задан
+          HOSTNAME=$(eval_opt "networking.hostName")
+          if [ "$HOSTNAME" = '"null"' ] || [ "$HOSTNAME" = 'null' ] || [ "$HOSTNAME" = '""' ]; then
+            echo "::error::networking.hostName не задан для $HOST!"
+            FAILED=1
+          fi
+
+          # Хотя бы один пользователь должен быть задан
+          USERS=$(nix eval \
+            ".#nixosConfigurations.${HOST}.config.users.users" \
+            --json 2>/dev/null | python3 -c "
+          import sys, json
+          d = json.load(sys.stdin)
+          real = [k for k,v in d.items() if v.get('isNormalUser', False)]
+          print(len(real))
+          " 2>/dev/null || echo "0")
+
+          if [ "$USERS" = "0" ]; then
+            echo "::warning::Нет обычных пользователей (isNormalUser=true) в конфиге $HOST"
+          else
+            echo "✓ Обычных пользователей: $USERS"
+          fi
+
+          exit $FAILED
