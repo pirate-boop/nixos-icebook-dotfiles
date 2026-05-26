@@ -9,7 +9,7 @@
 { pkgs, ... }: {
   boot.loader = {
     efi = {
-      canTouchEfiVariables = true;
+      canTouchEfiVariables = афдыу;
       efiSysMountPoint = "/boot";       # явно указываем, нужно для GRUB
     };
 
