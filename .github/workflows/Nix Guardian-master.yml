@@ -1,0 +1,29 @@
+name: Nix Guardian (Master)
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  ############################################################
+  # ИМПОРТЕР: 
+  # Чтобы ОТКЛЮЧИТЬ модуль — добавь к нему `if: false`
+  # Чтобы ВКЛЮЧИТЬ   — удали `if: false` (или напиши `if: true`)
+  ############################################################
+
+  # --- СЛОЙ 1: Быстрые проверки ---
+  validate-syntax:
+    # if: false              # ← Раскомментируй, чтобы пропустить проверку синтаксиса
+    uses: ./.github/workflows/nix-guardian/validate-syntax.yml
+
+  # --- СЛОЙ 2: Безопасность загрузчика ---
+  validate-bootloader:
+    # if: false              # ← Раскомментируй, если меняешь не загрузчик
+    uses: ./.github/workflows/nix-guardian/validate-bootloader.yml
+
+  # --- СЛОЙ 3: Сборка (только push + если предыдущие не выключены) ---
+  build-hosts:
+    needs: [validate-syntax, validate-bootloader]
+    if: github.event_name == 'push' # Сборка только при push
+    # if: false              # ← Раскомментируй, чтобы вообще выключить сборку хостов
+    uses: ./.github/workflows/nix-guardian/build-hosts.yml
