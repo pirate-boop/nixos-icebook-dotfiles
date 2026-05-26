@@ -1,1 +1,64 @@
+name: Build Hosts
 
+on:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            accept-flake-config = true
+
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v15
+        with:
+          name: nix-community
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+          pushFilter: '-source$'
+
+      # МАГИЯ ЗДЕСЬ: Достаем список хостов прямо из flake.nix
+      - name: Get hostnames from flake
+        id: hosts
+        run: |
+          HOSTS=$(nix eval .#nixosConfigurations --json | jq -c 'keys')
+          echo "matrix=$HOSTS" >> $GITHUB_OUTPUT
+
+    # Теперь запускаем билд для каждого найденного хоста
+    outputs:
+      matrix: ${{ steps.hosts.outputs.matrix }}
+
+  build-matrix:
+    needs: [build]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: 
+        host: ${{ fromJson(needs.build.outputs.matrix) }}
+      fail-fast: false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            accept-flake-config = true
+
+      - name: Build ${{ matrix.host }}
+        run: |
+          nix build \
+            .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel \
+            --no-link \
+            --show-trace \
+            --print-build-logs
