@@ -3,7 +3,8 @@ name: Nix Guardian (Master)
 on:
   push:
   pull_request:
-
+   workflow_dispatch:
+   
 jobs:
   validate-syntax:
     # if: false  # Раскомментируй, чтобы пропустить
