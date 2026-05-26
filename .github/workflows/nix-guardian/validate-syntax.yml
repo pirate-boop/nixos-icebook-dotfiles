@@ -1,1 +1,99 @@
+name: Validate Syntax
 
+on:
+  workflow_call:
+
+jobs:
+  syntax-checks:
+    name: Static Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            accept-flake-config = true
+
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v15
+        with:
+          name: nix-community
+
+      - name: Flake check (no build)
+        run: nix flake check --no-build --show-trace
+
+      - name: Parse all nix files
+        run: |
+          FAILED=0
+          while IFS= read -r -d '' file; do
+            echo "Parsing $file"
+            if ! nix-instantiate --parse "$file" >/dev/null 2>&1; then
+              echo "::error file=$file::Parse failed"
+              FAILED=1
+            fi
+          done < <(find . -name "*.nix" -print0)
+          exit $FAILED
+
+      # ВЕРНУЛ NIRI
+      - name: Validate all Niri configs
+        run: |
+          FAILED=0
+          while IFS= read -r -d '' file; do
+            echo "::group::Validating $file"
+            if ! nix shell github:sodiboo/niri-flake#niri-stable -c niri validate -c "$file" 2>&1; then
+              echo "::error file=$file::Niri config validation failed"
+              FAILED=1
+            fi
+            echo "::endgroup::"
+          done < <(find . -path "*niri*" -name "config.kdl" -print0)
+          exit $FAILED
+
+      # ВЕРНУЛ SHELLCHECK
+      - name: Run shellcheck
+        run: |
+          nix shell nixpkgs#shellcheck -c bash -c '
+          FAILED=0
+          while IFS= read -r -d "" file; do
+            echo "::group::Shellcheck $file"
+            if ! shellcheck "$file"; then
+              echo "::error file=$file::Shellcheck failed"
+              FAILED=1
+            fi
+            echo "::endgroup::"
+          done < <(find . -type f \( -name "*.sh" -o -name "*.bash" \) -print0)
+          exit $FAILED
+          '
+
+      # ВЕРНУЛ ALEJANDRA
+      - name: Check formatting
+        run: |
+          nix shell nixpkgs#alejandra -c bash -c '
+          FAILED=0
+          while IFS= read -r -d "" file; do
+            echo "Checking format: $file"
+            if ! alejandra --check "$file" 2>&1; then
+              echo "::error file=$file::Formatting check failed"
+              FAILED=1
+            fi
+          done < <(find . -name "*.nix" -print0)
+          exit $FAILED
+          '
+
+      # ВЕРНУЛ SYMLINKS
+      - name: Check broken symlinks (relative only)
+        run: |
+          FAILED=0
+          while IFS= read -r -d '' link; do
+            target=$(readlink "$link")
+            if [[ "$target" == /* ]]; then
+              continue
+            fi
+            echo "::error file=$link::Broken relative symlink → $target"
+            FAILED=1
+          done < <(find . -xtype l -not -path "./.git/*" -print0)
+          exit $FAILED
