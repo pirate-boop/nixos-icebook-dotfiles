@@ -4,5 +4,6 @@
     #./program.yazi.plugins.nix
     #./zoom-program.nix
     ./flatpak.nix
+    ./fptn-vpn-cli.nix
   ];
 }
