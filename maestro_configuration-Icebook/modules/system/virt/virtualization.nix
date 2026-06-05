@@ -47,4 +47,13 @@
   # на ноутбуке без дискретной GPU VFIO не нужен.
   # Если нужен будет passthrough USB устройств — добавить intel_iommu=on
   # в system/core/boot.nix → kernelParams
+  # ── Redroid (Android в Docker) ─────────────────────────────────
+  virtualisation.docker.enable = true;
+
+  systemd.mounts = [{
+    what = "binder";
+    where = "/dev/binderfs";
+    type = "binder";
+    wantedBy = [ "multi-user.target" ];
+  }];
 }
