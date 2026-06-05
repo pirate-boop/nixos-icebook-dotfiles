@@ -7,5 +7,6 @@
     ./hyprlock.nix
     ./yazi.plugins.nix
     ./rust-language.nix
+    ./scripts.nix
   ];
 }
