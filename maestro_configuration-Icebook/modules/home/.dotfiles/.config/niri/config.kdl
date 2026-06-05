@@ -867,7 +867,7 @@ binds {
     Mod+Shift+V { switch-focus-between-floating-and-tiling; }
 
     Mod+Caps_Lock       { toggle-window-floating; }
-    Mod+Shift+CapsLock { maximize-column; }
+    Mod+Shift+Caps_Lock { maximize-column; }
 
     // Toggle tabbed column display mode.
     // Windows in this column will appear as vertical tabs,
