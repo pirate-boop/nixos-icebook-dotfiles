@@ -658,10 +658,12 @@ binds {
     // Open/close the Overview: a zoomed-out view of workspaces and windows.
     // You can also move the mouse into the top-left hot corner,
     // or do a four-finger swipe up on a touchpad.
-    Mod+O repeat=false { toggle-overview; }
+    //Mod+O repeat=false { toggle-overview; }
 
-    Mod+Q repeat=false { close-window; }
+    //Mod+Q repeat=false { close-window; }
 
+    Mod+Escape repeat=false { close-window; }
+    
     Mod+Left  { focus-column-left; }
     Mod+Down  { focus-workspace-down; }
     Mod+Up    { focus-workspace-up; }
@@ -776,15 +778,29 @@ binds {
     //
     // For example, with 2 workspaces + 1 empty, indices 3, 4, 5 and so on
     // will all refer to the 3rd workspace.
-    Mod+1 { focus-workspace 1; }
-    Mod+2 { focus-workspace 2; }
-    Mod+3 { focus-workspace 3; }
-    Mod+4 { focus-workspace 4; }
-    Mod+5 { focus-workspace 5; }
-    Mod+6 { focus-workspace 6; }
-    Mod+7 { focus-workspace 7; }
-    Mod+8 { focus-workspace 8; }
-    Mod+9 { focus-workspace 9; }
+    //Mod+1 { focus-workspace 1; }
+    //Mod+2 { focus-workspace 2; }
+    //Mod+3 { focus-workspace 3; }
+    //Mod+4 { focus-workspace 4; }
+    //Mod+5 { focus-workspace 5; }
+    //Mod+6 { focus-workspace 6; }
+    //Mod+7 { focus-workspace 7; }
+    //Mod+8 { focus-workspace 8; }
+    //Mod+9 { focus-workspace 9; }
+
+    Mod+1 { spawn-sh "~/.local/bin/niri-focus-nth.sh 1"; }
+    Mod+2 { spawn-sh "~/.local/bin/niri-focus-nth.sh 2"; }
+    Mod+3 { spawn-sh "~/.local/bin/niri-focus-nth.sh 3"; }
+    Mod+4 { spawn-sh "~/.local/bin/niri-focus-nth.sh 4"; }
+    Mod+5 { spawn-sh "~/.local/bin/niri-focus-nth.sh 5"; }
+    Mod+6 { spawn-sh "~/.local/bin/niri-focus-nth.sh 6"; }
+    Mod+7 { spawn-sh "~/.local/bin/niri-focus-nth.sh 7"; }
+    Mod+8 { spawn-sh "~/.local/bin/niri-focus-nth.sh 8"; }
+    Mod+9 { spawn-sh "~/.local/bin/niri-focus-nth.sh 9"; }
+    Mod+0 { spawn-sh "~/.local/bin/niri-focus-nth.sh 10"; }
+    Mod+Tab       { focus-workspace-down; }
+    Mod+Shift+Tab { focus-workspace-up; }
+    
     Mod+Ctrl+1 { move-column-to-workspace 1; }
     Mod+Ctrl+2 { move-column-to-workspace 2; }
     Mod+Ctrl+3 { move-column-to-workspace 3; }
@@ -850,6 +866,9 @@ binds {
     Mod+V       { toggle-window-floating; }
     Mod+Shift+V { switch-focus-between-floating-and-tiling; }
 
+    Mod+CapsLock       { toggle-window-floating; }
+    Mod+Shift+CapsLock { maximize-column; }
+
     // Toggle tabbed column display mode.
     // Windows in this column will appear as vertical tabs,
     // rather than stacked on top of each other.
@@ -875,7 +894,7 @@ binds {
     //
     // The allow-inhibiting=false property can be applied to other binds as well,
     // which ensures niri always processes them, even when an inhibitor is active.
-    Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
+    //Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
 
     // The quit action will show a confirmation dialog to avoid accidental exits.
     Mod+Shift+E { quit; }
@@ -890,6 +909,13 @@ binds {
     Mod+Z { spawn "AyuGram"; }
     Mod+Space { switch-layout "next"; }
     Mod+S { spawn "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
+
+    F4  { fullscreen-window; }
+    F9  { spawn "brightnessctl" "--class=leds" "set" "10%+"; }
+    F10 { spawn "qalculate-gtk"; }
+    F11 { spawn "thunderbird"; }
+    F12 { spawn "noctalia-shell" "ipc" "call" "sessionMenu" "toggle"; }
+
 //    Mod+Alt+Left  { focus-monitor-left; }
 //    Mod+Alt+Right { focus-monitor-right; }
 //    Mod+Alt+Up    { focus-monitor-up; }
