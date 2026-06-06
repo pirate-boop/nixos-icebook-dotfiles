@@ -14,7 +14,7 @@
       package    = pkgs.qemu_kvm;
       runAsRoot  = true;
       swtpm.enable = true;          # TPM для Windows 11
-      vhostUserPackages = [ pkgs.virtiofsd ]
+      vhostUserPackages = [ pkgs.virtiofsd ];
     };
   };
   
