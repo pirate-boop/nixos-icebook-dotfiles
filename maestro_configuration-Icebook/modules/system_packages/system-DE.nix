@@ -51,6 +51,6 @@
 
     # ── Waybar (резерв если noctalia не заведётся) ─
     # waybar
-    noctalia-shell
+    # noctalia-shell
   ];
 }
