@@ -18,5 +18,6 @@
     ./kori-cachix.nix
     ./helix.nix     # раскомментируй если пишешь в helix
     # ./hyprland.nix  # раскомментируй если вернёшься к Hyprland
+    ./noctalia-shell-cache.nix
   ];
 }
