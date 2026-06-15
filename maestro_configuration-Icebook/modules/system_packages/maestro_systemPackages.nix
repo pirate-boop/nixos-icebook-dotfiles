@@ -27,5 +27,6 @@
     ./WaydroiSU.nix
    ./waydroid-extra.nix
    #./flatpak.nix
+   ./offensive-wifitools.nix
   ];
 }
