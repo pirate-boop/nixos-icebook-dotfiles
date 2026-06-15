@@ -29,5 +29,6 @@
    #./flatpak.nix
    ./offensive-wifitools.nix
    ./scrcpy-gui.nix
+   ./noctalia-shell-dev.nix
   ];
 }
