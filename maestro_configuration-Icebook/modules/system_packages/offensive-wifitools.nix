@@ -12,7 +12,7 @@
     hashcat
     
     # Дополнительный софт, что тебе посоветовали:
-    reaver
+    reaverwps-t6x
     pixiewps
     bettercap
   ];
