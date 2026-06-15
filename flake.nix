@@ -15,7 +15,7 @@
     waydroid-script     = { url = "github:casualsnek/waydroid_script"; inputs.nixpkgs.follows = "nixpkgs"; };
     anime-cursors.url   = "github:pirate-boop/anime-cursors";
     scrcpy-gui          = { url = "github:kil0bit-kb/scrcpy-gui"; inputs.nixpkgs.follows = "nixpkgs"; };
-    noctalia.url = "github:noctalia-dev/noctalia";
+    noctalia.url        = "github:noctalia-dev/noctalia";
   };
 
   outputs = inputs@{ flake-parts, ... }:
