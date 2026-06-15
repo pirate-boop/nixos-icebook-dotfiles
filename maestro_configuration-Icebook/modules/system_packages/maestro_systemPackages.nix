@@ -28,5 +28,6 @@
    ./waydroid-extra.nix
    #./flatpak.nix
    ./offensive-wifitools.nix
+   ./scrcpy-gui.nix
   ];
 }
