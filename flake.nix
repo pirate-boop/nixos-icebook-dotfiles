@@ -14,6 +14,7 @@
     lfff                = { url = "github:mrFrok/LibreFastbootFirmwareFlasher"; inputs.nixpkgs.follows = "nixpkgs"; };
     waydroid-script     = { url = "github:casualsnek/waydroid_script"; inputs.nixpkgs.follows = "nixpkgs"; };
     anime-cursors.url   = "github:pirate-boop/anime-cursors";
+    scrcpy-gui          = { url = "github:kil0bit-kb/scrcpy-gui"; inputs.nixpkgs.follows = "nixpkgs"; };
   };
 
   outputs = inputs@{ flake-parts, ... }:
