@@ -10,7 +10,7 @@
     chaotic             = { url = "github:chaotic-cx/nyx/nyxpkgs-unstable"; inputs.nixpkgs.follows = "nixpkgs"; };
     zen-browser         = { url = "github:0xc000022070/zen-browser-flake"; inputs.nixpkgs.follows = "nixpkgs"; };
     nirimod             = { url = "github:srinivasr/nirimod"; inputs.nixpkgs.follows = "nixpkgs"; };
-    sysc-greet          = { url = "github:Nomadcxx/sysc-greet"; inputs.nixpkgs.follows = "nixpkgs"; };
+    # sysc-greet          = { url = "github:Nomadcxx/sysc-greet"; inputs.nixpkgs.follows = "nixpkgs"; };
     lfff                = { url = "github:mrFrok/LibreFastbootFirmwareFlasher"; inputs.nixpkgs.follows = "nixpkgs"; };
     waydroid-script     = { url = "github:casualsnek/waydroid_script"; inputs.nixpkgs.follows = "nixpkgs"; };
     anime-cursors.url   = "github:pirate-boop/anime-cursors";
