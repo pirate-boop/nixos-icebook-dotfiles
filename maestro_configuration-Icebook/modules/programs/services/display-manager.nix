@@ -2,7 +2,7 @@
 
 let
   custom-sddm-astronaut = pkgs.sddm-astronaut.override {
-    embeddedTheme = "pixel_sakura";
+    embeddedTheme = "hyprland_kath";
   };
 
 in {
