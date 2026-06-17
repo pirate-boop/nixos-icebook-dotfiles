@@ -1,8 +1,18 @@
-{ inputs, ... }: {
-  services.displayManager.sddm.enable = false;
-  imports = [ inputs.sysc-greet.nixosModules.default ];
-  services.sysc-greet = {
+{ pkgs, ... }:
+
+let
+  custom-sddm-astronaut = pkgs.sddm-astronaut.override {
+    embeddedTheme = "pixel_sakura";
+  };
+
+in {
+  services.displayManager.sddm = {
     enable = true;
-    compositor = "niri";
+    theme = "sddm-astronaut-theme";
+    
+    extraPackages = [
+      custom-sddm-astronaut
+      pkgs.kdePackages.qtmultimedia
+    ];
   };
 }
