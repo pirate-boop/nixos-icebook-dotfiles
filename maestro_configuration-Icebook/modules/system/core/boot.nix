@@ -1,6 +1,6 @@
 { pkgs, config, ... }: {
   boot = {
-    bootspec.enable = true;
+    #bootspec.enable = true;
     initrd = {
       systemd.enable = true;
       supportedFilesystems = [ "ext4" "btrfs" "xfs" ];
