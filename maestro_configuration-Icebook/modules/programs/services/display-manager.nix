@@ -8,6 +8,7 @@ let
 in {
   services.displayManager.sddm = {
     enable = true;
+    wayland.enable = true; # Обязательно для SDDM, если выключен X-сервер
     theme = "sddm-astronaut-theme";
     
     extraPackages = [
