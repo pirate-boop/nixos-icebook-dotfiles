@@ -23,6 +23,7 @@
       "users"
       "kvm"
       "plugdev"
+      "gnunet"
     ];
   };
   #users.users.kori.password = "donatwwww12";
