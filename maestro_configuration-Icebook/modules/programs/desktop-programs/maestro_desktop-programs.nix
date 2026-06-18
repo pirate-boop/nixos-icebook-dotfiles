@@ -6,5 +6,6 @@
     ./flatpak.nix
     ./fptn-vpn-cli.nix
     ./throne-vpn.nix
+    ./gnunet.nix
   ];
 }
