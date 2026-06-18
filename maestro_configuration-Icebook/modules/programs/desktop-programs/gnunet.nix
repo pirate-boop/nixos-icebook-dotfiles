@@ -14,6 +14,9 @@
   # Выделяем под децентрализованный файлообмен 4 Гб
   services.gnunet.fileSharing.quota = 4096;
 
-  # CLI-пакет для управления из терминала
-  environment.systemPackages = [ pkgs.gnunet ];
+  # CLI-пакеты для управления из терминала и P2P-чат
+  environment.systemPackages = [ 
+    pkgs.gnunet 
+    pkgs.gnunet-messenger-cli
+  ];
 }
