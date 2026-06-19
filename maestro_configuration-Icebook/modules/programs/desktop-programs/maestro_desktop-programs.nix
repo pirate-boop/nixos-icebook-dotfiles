@@ -7,6 +7,6 @@
     ./fptn-vpn-cli.nix
     ./throne-vpn.nix
     ./gnunet.nix
-    ./v2raya-tproxy.nix
+    #./v2raya-tproxy.nix
   ];
 }
