@@ -6,5 +6,6 @@
     # v2raya           # V2Ray GUI (если нужен)
     # xray             # Xray core
     # mullvad-vpn      # Mullvad (если подпишешься)
+    linux-wifi-hotspot
   ];
 }
