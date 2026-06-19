@@ -1,15 +1,31 @@
 { config, pkgs, ... }:
 
 {
-  # Включаем системную службу v2rayA
+  # 1. Включаем службу v2rayA на движке xray
   services.v2raya.enable = true;
-
-  # (Опционально) Явно указываем использовать актуальное ядро xray вместо старого v2ray
   services.v2raya.cliPackage = pkgs.xray;
 
-  # Открываем порты в локальном фаерволе, если планируешь раздавать TProxy на другие устройства в домашней сети
-  # Для самого ноутбука это не обязательно, но для локальной веб-морды и проксирования полезно
-  networking.firewall = {
-    allowedTCPPorts = [ 2017 ]; # Порт веб-интерфейса
+  # 2. Прямо при загрузке ноута втыкаем нужные модули ядра в память
+  boot.kernelModules = [ 
+    "nf_tproxy_ipv4" 
+    "nf_tproxy_ipv6" 
+    "nft_tproxy" 
+    "xt_TPROXY" 
+  ];
+
+  # 3. Разрешаем пересылку пакетов на уровне ядра (без этого TProxy сдохнет)
+  boot.kernel.sysctl = {
+    "net.ipv4.ip_forward" = 1;
+    "net.ipv6.conf.all.forwarding" = 1;
   };
+
+  # 4. Даем изолированной службе доступ к сетевым бинарникам
+  systemd.services.v2raya.path = with pkgs; [
+    nftables
+    iptables
+    iproute2
+  ];
+
+  # 5. Открываем только порт веб-интерфейса
+  networking.firewall.allowedTCPPorts = [ 2017 ];
 }
