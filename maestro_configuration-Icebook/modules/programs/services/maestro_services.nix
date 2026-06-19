@@ -12,5 +12,6 @@
     ./portal.nix
     ./xconf.nix
     ./Icebook-suspend.nix
+    ./plymouth-lonely.nix
   ];
 }
