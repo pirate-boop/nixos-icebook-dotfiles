@@ -7,5 +7,6 @@
     # xray             # Xray core
     # mullvad-vpn      # Mullvad (если подпишешься)
     linux-wifi-hotspot
+    daed
   ];
 }
