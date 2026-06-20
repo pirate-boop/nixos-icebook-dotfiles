@@ -5,5 +5,6 @@
     ./vfio.nix
     ./virtualization.nix
     ./waydroid.nix
+    ./redroid-docker.nix
   ];
 }
