@@ -14,7 +14,7 @@
           repo = "lonely";
           rev = "main";
           # Временная заглушка. При сборке Nix выдаст ошибку и покажет правильный хэш (SRI), который нужно будет вставить сюда.
-          sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+          sha256 = "sha256-5J5VyVtuQOYZKv/h1MsqhscRj3pil+G/tDgZmOHXj7g=";
         };
 
         # Копируем всё содержимое репозитория прямо в системную директорию тем Plymouth
