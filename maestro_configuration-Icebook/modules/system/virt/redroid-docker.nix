@@ -12,16 +12,16 @@
     
     volumes = [
       "/var/lib/redroid:/data"
-      
-      # Обход ограничения binderfs: маппим конкретные файлы устройств внутрь контейнера
-      "/dev/binderfs/binder:/dev/binder"
-      "/dev/binderfs/hwbinder:/dev/hwbinder"
-      "/dev/binderfs/vndbinder:/dev/vndbinder"
     ];
 
     extraOptions = [
       "--privileged"
       "--device=/dev/dri:/dev/dri" # Твоя графика Radeon 780M
+      
+      # Перенесли сюда как честные устройства ядра
+      "--device=/dev/binderfs/binder:/dev/binder"
+      "--device=/dev/binderfs/hwbinder:/dev/hwbinder"
+      "--device=/dev/binderfs/vndbinder:/dev/vndbinder"
     ];
 
     cmd = [
@@ -41,6 +41,18 @@
       "ro.secure=0"
       "ro.debuggable=1"
     ];
+  };
+
+  # Автоматически выставляем права 666 при загрузке системы для работы Binder в контейнере
+  systemd.services.fix-binder-permissions = {
+    description = "Set world-writable permissions for binderfs devices";
+    after = [ "local-fs.target" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.coreutils}/bin/chmod 666 /dev/binderfs/binder /dev/binderfs/hwbinder /dev/binderfs/vndbinder";
+      RemainAfterExit = true;
+    };
   };
 
   # Системный софт для вывода экрана
