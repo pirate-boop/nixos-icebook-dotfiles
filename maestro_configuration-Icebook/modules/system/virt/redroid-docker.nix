@@ -1,50 +1,52 @@
 { config, pkgs, ... }:
 
 {
-  # Включаем Docker
+  # Включаем Docker-движок
   virtualisation.docker.enable = true;
   virtualisation.oci-containers.backend = "docker";
 
-  # Подгружаем модули ядра хоста для Android IPC
-  boot.kernelModules = [ "binder_linux" ];
-  boot.kernelParams = [ "binder.devices=binder,vndbinder,pwbinder,hwbinder" ];
-
-  # Описание контейнера
+  # Описание контейнера Redroid (NDK + Magisk + GApps)
   virtualisation.oci-containers.containers.redroid = {
-    # Берем стабильный NDK образ с Magisk и GApps на базе Android 12
     image = "erstt/redroid:12.0.0_ndk_magisk_litegapps_ChromeOS"; 
-    
     ports = [ "5555:5555" ];
     
     volumes = [
-      "/var/lib/redroid:/data" # Здесь будут жить твои игры и данные аккаунтов
+      "/var/lib/redroid:/data"
+      
+      # Обход ограничения binderfs: маппим конкретные файлы устройств внутрь контейнера
+      "/dev/binderfs/binder:/dev/binder"
+      "/dev/binderfs/hwbinder:/dev/hwbinder"
+      "/dev/binderfs/vndbinder:/dev/vndbinder"
     ];
 
     extraOptions = [
       "--privileged"
-      "--device=/dev/dri:/dev/dri" # Проброс твоей встройки AMD 780M
+      "--device=/dev/dri:/dev/dri" # Твоя графика Radeon 780M
     ];
 
     cmd = [
-      "androidboot.redroid_gpu_mode=host" # Включаем аппаратный рендеринг на GPU хоста
+      "androidboot.redroid_gpu_mode=host"
       "androidboot.hardware=redroid"
       
-      # Подгоняем под дисплей твоего Icebook (1920x1200, 165Hz)
+      # Подгоняем под дисплей твоего Icebook (1920x1200)
       "androidboot.redroid_width=1920"
       "androidboot.redroid_height=1200"
-      "androidboot.redroid_fps=90"        # 90 кадров для баланса плавности и жора батареи
-      "androidboot.redroid_dpi=280"       # Плотность пикселей, чтобы интерфейс не был мелким
+      "androidboot.redroid_fps=90"
+      "androidboot.redroid_dpi=280"
       
-      # Переменные отладки и рута
+      # Разрешаем подмену мемфд для новых ядер
+      "androidboot.use_memfd=1"
+      
+      # Настройки рута
       "ro.secure=0"
       "ro.debuggable=1"
     ];
   };
 
-  # Системные пакеты для вывода экрана и дебага
+  # Системный софт для вывода экрана
   environment.systemPackages = with pkgs; [
-    #scrcpy
+    scrcpy
     android-tools
-    sqlite # Понадобится для вытаскивания Google ID
+    sqlite
   ];
 }
