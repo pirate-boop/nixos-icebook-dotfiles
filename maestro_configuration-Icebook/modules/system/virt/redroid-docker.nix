@@ -12,16 +12,16 @@
     
     volumes = [
       "/var/lib/redroid:/data"
+      
+      # Возвращаем сюда! Bind mount сохраняет контекст файловой системы ядра
+      "/dev/binderfs/binder:/dev/binder"
+      "/dev/binderfs/hwbinder:/dev/hwbinder"
+      "/dev/binderfs/vndbinder:/dev/vndbinder"
     ];
 
     extraOptions = [
       "--privileged"
-      "--device=/dev/dri:/dev/dri" # Твоя графика Radeon 780M
-      
-      # Перенесли сюда как честные устройства ядра
-      "--device=/dev/binderfs/binder:/dev/binder"
-      "--device=/dev/binderfs/hwbinder:/dev/hwbinder"
-      "--device=/dev/binderfs/vndbinder:/dev/vndbinder"
+      "--device=/dev/dri:/dev/dri" # Твоя графика Radeon 780M работает через device отлично
     ];
 
     cmd = [
@@ -43,11 +43,12 @@
     ];
   };
 
-  # Автоматически выставляем права 666 при загрузке системы для работы Binder в контейнере
+  # Этот сервис критически важен: он даёт права ДО того, как Docker подхватит эти файлы в volumes
   systemd.services.fix-binder-permissions = {
     description = "Set world-writable permissions for binderfs devices";
+    before = [ "docker-redroid.service" ];
+    requiredBy = [ "docker-redroid.service" ];
     after = [ "local-fs.target" ];
-    wantedBy = [ "multi-user.target" ];
     serviceConfig = {
       Type = "oneshot";
       ExecStart = "${pkgs.coreutils}/bin/chmod 666 /dev/binderfs/binder /dev/binderfs/hwbinder /dev/binderfs/vndbinder";
