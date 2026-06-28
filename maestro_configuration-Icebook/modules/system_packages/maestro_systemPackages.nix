@@ -30,5 +30,6 @@
    ./offensive-wifitools.nix
    ./scrcpy-gui.nix
    ./noctalia-shell-dev.nix
+   ./ttt.nix
   ];
 }
