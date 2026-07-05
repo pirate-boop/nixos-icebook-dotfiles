@@ -1,4 +1,9 @@
 { pkgs, ... }: {
+  # Временное разрешение на сборку уязвимого pnpm для daed
+  nixpkgs.config.permittedInsecurePackages = [
+    "pnpm-9.15.9"
+  ];
+
   environment.systemPackages = with pkgs; [
     wireguard-tools    # WireGuard CLI утилиты
     wireguard-go       # Userspace WireGuard (Go)
