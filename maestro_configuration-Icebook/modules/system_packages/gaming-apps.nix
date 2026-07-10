@@ -6,6 +6,7 @@
     protonup-qt
 
     # ── Лаунчеры ──────────────────────────────────
+    faugus-launcher
     lutris
     (symlinkJoin {
      name = "heroic";
