@@ -6,8 +6,8 @@
     protonup-qt
 
     # ── Лаунчеры ──────────────────────────────────
-    faugus-launcher
-    lutris
+    #faugus-launcher
+    #lutris
     (symlinkJoin {
      name = "heroic";
      paths = [ heroic ];
@@ -18,7 +18,7 @@
      ''; 
     })
     # heroic             # Epic / GOG
-    bottles
+    #bottles
     brotato
 
     # ── Мониторинг производительности ─────────────
