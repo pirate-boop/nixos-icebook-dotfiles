@@ -19,7 +19,7 @@
     })
     # heroic             # Epic / GOG
     #bottles
-    brotato
+    #brotato
 
     # ── Мониторинг производительности ─────────────
     mangohud
