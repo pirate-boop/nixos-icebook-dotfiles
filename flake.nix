@@ -17,7 +17,7 @@
     scrcpy-gui          = { url = "github:kil0bit-kb/scrcpy-gui"; inputs.nixpkgs.follows = "nixpkgs"; };
     noctalia.url        = "github:noctalia-dev/noctalia";
     ttt.url             = "github:eugenioenko/ttt";
-    mangowm             = "github:mangowm/mango"; inputs.nixpkgs.follows = "nixpkgs";
+    mangowm             = { url = "github:mangowm/mango"; inputs.nixpkgs.follows = "nixpkgs"; };
   };
 
   outputs = inputs@{ flake-parts, ... }:
