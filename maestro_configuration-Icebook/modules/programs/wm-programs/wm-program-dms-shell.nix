@@ -6,6 +6,7 @@
   # ==========================================
   programs.mangowc.enable = true;
   # programs.mangowc.package = pkgs.mangowc; # Нужен только если собираешь из кастомного оверлея
+  programs.mangowc.package = true
 
   # ==========================================
   # 2. ОБОЛОЧКА: Dank Material Shell и фичи
