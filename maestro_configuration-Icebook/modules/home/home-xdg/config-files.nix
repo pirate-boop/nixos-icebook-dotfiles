@@ -1,7 +1,8 @@
 { pkgs, ... }: {
   #--NIRI--
   xdg.configFile."niri/config.kdl".source = ../.dotfiles/.config/niri/config.kdl; xdg.configFile."niri/config.kdl".force = true;
-
+  
+  xdg.configFile."mango/config.conf".source = ../.dotfiles/.config/mango/config.conf; xdg.configFile."mango/config.conf".force = true;
   #--HYPRLOCK--
   xdg.configFile."hypr/hyprlock.conf".source = ../.dotfiles/.config/hypr/hyprlock.conf;
 
