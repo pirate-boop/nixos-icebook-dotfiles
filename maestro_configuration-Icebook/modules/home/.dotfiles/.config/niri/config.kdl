@@ -108,7 +108,7 @@ binds {
     Mod+E { spawn "thunar"; }
     Mod+Z { spawn "AyuGram"; }
     //Mod+W { spawn "flatpak" "run" "app.zen_browser.zen"; }
-    Mod+K { spawn "vivaldi"; }
+    Mod+W { spawn "vivaldi"; }
     Mod+K { spawn "kate"; }
     Mod+M { spawn "pear-desktop"; }
     F10 { spawn "qalculate-gtk"; }
