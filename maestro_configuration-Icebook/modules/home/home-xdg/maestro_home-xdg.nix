@@ -3,6 +3,6 @@
     ./user-dirs.nix
     ./config-files.nix
     #./yazi-plugins.nix
-    ./mango-wc.nix
+    #./mango-wc.nix
   ];
 }
