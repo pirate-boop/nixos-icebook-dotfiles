@@ -18,6 +18,7 @@
     noctalia.url        = "github:noctalia-dev/noctalia";
     ttt.url             = "github:eugenioenko/ttt";
     mangowm             = { url = "github:mangowm/mango"; inputs.nixpkgs.follows = "nixpkgs"; };
+    dms =                 { url = "github:AvengeMedia/DankMaterialShell/stable"; inputs.nixpkgs.follows = "nixpkgs"; };
   };
 
   outputs = inputs@{ flake-parts, ... }:
