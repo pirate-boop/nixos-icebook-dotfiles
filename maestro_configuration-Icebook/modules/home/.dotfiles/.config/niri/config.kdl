@@ -300,4 +300,7 @@ blur {
     saturation 3.500000000000002
 }
 
-environment
+environment {
+    QT_QPA_PLATFORM "wayland"
+    DISPLAY ":0"
+}
