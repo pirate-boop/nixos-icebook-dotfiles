@@ -1,18 +1,18 @@
-# Добавляем inputs в фигурные скобки сверху
 { config, pkgs, inputs, ... }:
 
 {
-  # Явно импортируем модуль из флейка прямо здесь
   imports = [
     inputs.mangowm.nixosModules.mango
   ];
 
   # ==========================================
-  # 1. ВКЛЮЧАЕМ КОМПОЗИТОР MANGO (По твоей доке)
+  # 1. СИСТЕМНЫЙ МОДУЛЬ MANGO
   # ==========================================
   programs.mango.enable = true;
-  
-  # ... весь остальной твой код ниже без изменений ...
+
+  # ==========================================
+  # 2. ОБОЛОЧКА: Dank Material Shell
+  # ==========================================
   programs.dms-shell = {
     enable = true;
     enableDynamicTheming = true;     
@@ -25,6 +25,22 @@
     systemd.restartIfChanged = true;  
   };
 
+  # ==========================================
+  # 3. АВТОСТАРТ ЧЕРЕЗ HOME MANAGER (По твоей доке)
+  # ==========================================
+  # Добавляем скрипт автозапуска прямо в домашнюю конфигурацию
+  home-manager.users.Kori = {
+    wayland.windowManager.mango = {
+      enable = true;
+      autostart_sh = ''
+        dms-shell &
+      '';
+    };
+  };
+
+  # ==========================================
+  # 4. ЭКРАН ВХОДА
+  # ==========================================
   services.displayManager = {
     defaultSession = "mango"; 
     autoLogin = {
