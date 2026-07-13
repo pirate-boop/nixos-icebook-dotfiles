@@ -22,12 +22,13 @@ input {
 // ============ LAYOUT ============
 layout {
     gaps 2
-    center-focused-column "on-overflow"
+    center-focused-column "always"
 
     preset-column-widths {
-        proportion 0.33333
+        //proportion 0.33333
         proportion 0.5
-        proportion 0.66667
+        proportion 1.0
+        //proportion 0.66667
     }
 
     default-column-width { proportion 1.0; }
@@ -183,7 +184,7 @@ binds {
     // ---- window: close / overview / fullscreen ----
     Mod+Escape repeat=false { close-window; }
     Mod+X { toggle-overview; }
-    Mod+F { maximize-column; }
+    Mod+F { switch-preset-column-width; }
     Mod+Shift+F { fullscreen-window; }
     F4  { fullscreen-window; }
     Mod+Ctrl+F { expand-column-to-available-width; }
@@ -273,8 +274,8 @@ binds {
     Mod+Shift+Tab { focus-workspace-up; }
 
     // Сделать текущую колонку ровно на половину экрана (50%)
-    Mod+Alt+Left  { set-column-width "50%"; }
-    Mod+Alt+Right { set-column-width "100%"; }
+    //Mod+Alt+Left  { set-column-width "50%"; }
+    //Mod+Alt+Right { set-column-width "100%"; }
 
     Mod+Ctrl+1 { move-column-to-workspace 1; }
     Mod+Ctrl+2 { move-column-to-workspace 2; }
