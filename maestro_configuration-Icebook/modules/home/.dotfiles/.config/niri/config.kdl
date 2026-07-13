@@ -272,6 +272,10 @@ binds {
     Mod+Tab       { focus-workspace-down; }
     Mod+Shift+Tab { focus-workspace-up; }
 
+    // Сделать текущую колонку ровно на половину экрана (50%)
+    Mod+Shift+Left  { set-column-width "50%"; }
+    Mod+Shift+Right { set-column-width "50%"; }
+
     Mod+Ctrl+1 { move-column-to-workspace 1; }
     Mod+Ctrl+2 { move-column-to-workspace 2; }
     Mod+Ctrl+3 { move-column-to-workspace 3; }
