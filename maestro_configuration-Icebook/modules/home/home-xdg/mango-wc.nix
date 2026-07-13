@@ -1,8 +1,7 @@
 # home-programs/mango-wc.nix
 { inputs, pkgs, ... }:
 {
-  imports = [ inputs.mango.hmModules.mango ];
-
+  imports = [ inputs.mangowm.hmModules.mango ];
   wayland.windowManager.mango = {
     enable = true;
     settings = ''
