@@ -259,16 +259,16 @@ binds {
     Mod+Ctrl+Shift+WheelScrollUp   { move-column-left; }
 
     // ---- ИСПРАВЛЕНО: Рабочие переключатели окон по цифрам (без внешних скриптов) ----
-    Mod+1 { focus-workspace 1; }
-    Mod+2 { focus-workspace 2; }
-    Mod+3 { focus-workspace 3; }
-    Mod+4 { focus-workspace 4; }
-    Mod+5 { focus-workspace 5; }
-    Mod+6 { focus-workspace 6; }
-    Mod+7 { focus-workspace 7; }
-    Mod+8 { focus-workspace 8; }
-    Mod+9 { focus-workspace 9; }
-    Mod+0 { focus-workspace 10; }
+    Mod+1 { spawn "niri-focus" "1"; }
+    Mod+2 { spawn "niri-focus" "2"; }
+    Mod+3 { spawn "niri-focus" "3"; }
+    Mod+4 { spawn "niri-focus" "4"; }
+    Mod+5 { spawn "niri-focus" "5"; }
+    Mod+6 { spawn "niri-focus" "6"; }
+    Mod+7 { spawn "niri-focus" "7"; }
+    Mod+8 { spawn "niri-focus" "8"; }
+    Mod+9 { spawn "niri-focus" "9"; }
+    Mod+0 { spawn "niri-focus" "10"; }
     Mod+Tab       { focus-workspace-down; }
     Mod+Shift+Tab { focus-workspace-up; }
 
