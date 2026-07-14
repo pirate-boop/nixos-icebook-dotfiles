@@ -7,7 +7,7 @@
     # sushi
     # code-nautilus
     # kdePackages.dolphin    # File manager by KDE
-    kdePackages.dolphin-plugins
+    # kdePackages.dolphin-plugins
     thunar
     thunar-volman        # автомонтирование
     thunar-archive-plugin # правый клик → архивы
