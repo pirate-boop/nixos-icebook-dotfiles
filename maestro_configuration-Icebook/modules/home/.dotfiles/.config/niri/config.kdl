@@ -162,7 +162,8 @@ binds {
     F11 { spawn "thunderbird"; }
 
     // ---- session / lock / dms panels ----
-    Super+Alt+L hotkey-overlay-title="Lock the Screen: Dank Material Shell" { spawn "dms" "ipc" "call" "lock" "lock"; }
+    //Super+Alt+L hotkey-overlay-title="Lock the Screen: Dank Material Shell" { spawn "dms" "ipc" "call" "lock" "lock"; }
+    Super+Alt+L hotkey-overlay-title="Lock the Screen: Dank Material Shell" { spawn "lock-session-kori"; }
     Super+Alt+S allow-when-locked=true hotkey-overlay-title=null { spawn-sh "pkill orca || exec orca"; }
     Mod+S { spawn "dms" "ipc" "call" "launcher" "toggle"; }
     Mod+Shift+Escape { spawn "dms" "ipc" "call" "powermenu" "toggle"; }
