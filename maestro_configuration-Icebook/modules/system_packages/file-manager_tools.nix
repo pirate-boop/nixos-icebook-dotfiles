@@ -5,8 +5,8 @@
     # nautilus               # GUI (GTK, работает в Hyprland)
     # nautilus-open-any-terminal
     # sushi
-    code-nautilus
-    kdePackages.dolphin    # File manager by KDE
+    # code-nautilus
+    # kdePackages.dolphin    # File manager by KDE
     kdePackages.dolphin-plugins
     thunar
     thunar-volman        # автомонтирование
