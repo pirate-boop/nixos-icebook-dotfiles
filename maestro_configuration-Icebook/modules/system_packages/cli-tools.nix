@@ -33,6 +33,5 @@
     mesa-demos
     payload_dumper
     coreutils
-    wayvnc
   ];
 }
