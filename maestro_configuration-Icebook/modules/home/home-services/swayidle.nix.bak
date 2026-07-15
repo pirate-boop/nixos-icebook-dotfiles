@@ -17,18 +17,18 @@
     events = [
       {
         event = "before-sleep";
-        command = "${pkgs.hyprlock}/bin/hyprlock";
+        command = "lock-session-kori";
       }
     ];
 
     timeouts = [
       {
         timeout = 300;
-        command = "${pkgs.hyprlock}/bin/hyprlock";
+        command = "lock-session-kori";
       }
       {
         timeout = 600;
-        command = "${pkgs.systemd}/bin/systemctl suspend";
+        command = "systemctl suspend";
       }
     ];
   };
