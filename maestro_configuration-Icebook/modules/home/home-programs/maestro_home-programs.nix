@@ -9,5 +9,6 @@
     ./rust-language.nix
     ./niri-focus.nix
     ./wayvnc.nix
+    ./lock-session-kori.nix
   ];
 }
