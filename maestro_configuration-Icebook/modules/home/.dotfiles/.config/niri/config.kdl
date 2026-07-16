@@ -357,3 +357,11 @@ environment {
     QT_QPA_PLATFORM "wayland"
     DISPLAY ":0"
 }
+
+// Блокировка при закрытии крышки ноутбука
+switch-events {
+    lid-close { spawn "dms" "ipc" "call" "lock" "lock"; }
+}
+
+// Блокировка строго ДО ухода в сон (используя swayidle)
+spawn-at-startup "swayidle" "-w" "before-sleep" "dms ipc call lock lock"
