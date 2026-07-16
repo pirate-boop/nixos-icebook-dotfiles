@@ -15,5 +15,6 @@
     ./shell/maestro_shell.nix                          # ZSH + oh-my-zsh
     ./virt/maestro_virt.nix                            # libvirtd, QEMU, Waydroid
     ./keyboard-settings/maestro_keyboard-settings.nix  # keyboard-settings
+    ./udev-rules/maestro_udev-rules.nix
   ];
 }
