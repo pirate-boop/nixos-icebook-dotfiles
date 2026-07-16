@@ -6,5 +6,6 @@
 { config, pkgs, inputs, ... }: {
   imports = [
     ./wakeup.nix
+    ./wakeup-solver.nix
   ];
 }
