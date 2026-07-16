@@ -16,7 +16,7 @@
     events = [
       {
         event = "before-sleep";
-        command = "${pkgs.hyprlock}/bin/hyprlock";
+        command = "$lock-session-kori";
       }
     ];
 
