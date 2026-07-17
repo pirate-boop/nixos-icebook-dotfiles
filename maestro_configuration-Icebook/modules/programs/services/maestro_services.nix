@@ -1,6 +1,6 @@
 { ... }: {
   imports = [
-    ./display-manager.nix  # SDDM (Wayland)
+    #./display-manager.nix  # SDDM (Wayland)
     # ./udev-mtps/maestro_udev-mtps.nix
     ./geoclue2.nix
     ./upower.nix
