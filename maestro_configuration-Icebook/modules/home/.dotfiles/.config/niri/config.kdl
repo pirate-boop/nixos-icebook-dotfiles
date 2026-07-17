@@ -233,7 +233,7 @@ binds {
     Mod+Shift+Ctrl+H     { move-column-to-monitor-left; }
     Mod+Shift+Ctrl+L     { move-column-to-monitor-right; }
     Mod+Shift+Ctrl+J     { move-column-to-monitor-down; }
-    hift+Ctrl+K     { move-column-to-monitor-up; }
+    Mod+Shift+Ctrl+K     { move-column-to-monitor-up; }
 
     // ---- workspaces (page keys) ----
     Mod+Page_Down      { focus-workspace-down; }
