@@ -1,1 +1,367 @@
+// ============ INPUT ============
+input {
+    keyboard {
+        xkb {
+            layout "us,ru"
+        }
+        numlock
+    }
 
+    touchpad {
+        tap
+        natural-scroll
+    }
+
+    mouse
+
+    trackpoint
+
+    focus-follows-mouse max-scroll-amount="0%"
+}
+
+// ============ LAYOUT ============
+layout {
+    gaps 2
+    center-focused-column "on-overflow"
+
+    preset-column-widths {
+        //proportion 0.33333
+        proportion 0.5
+        proportion 1.0
+        //proportion 0.66667
+    }
+
+    default-column-width { proportion 1.0; }
+
+    focus-ring {
+        width 2
+        active-color "#c061cb"
+        inactive-color "#505050"
+    }
+
+    // --- УКРАДЕНО: Красивые градиенты на рамки окон ---
+    border {
+        width 4
+        active-gradient from="#f38ba8" to="#f9e2af" angle=45 relative-to="workspace-view"
+        inactive-gradient from="#585b70" to="#7f849c" angle=45 relative-to="workspace-view"
+        urgent-color "#9b0000"
+    }
+
+    shadow {
+        on
+        softness 39
+        spread 5
+        offset x=0 y=5
+        color "#c061cb"
+    }
+
+    struts
+}
+
+// ============ AUTOSTART ============
+//spawn-at-startup "dms" "run"
+spawn-at-startup "xwayland-satellite"
+spawn-at-startup "swayidle" "-w"
+
+hotkey-overlay {
+    skip-at-startup
+}
+
+screenshot-path "~/Pictures/Screenshots/from %Y-%m-%d %H-%M-%S.png"
+
+// ============ ANIMATIONS ============
+animations {
+    workspace-switch
+
+    // --- УКРАДЕНО: Кастомный WebGL шейдер для ресайза окон ---
+    window-resize {
+        custom-shader r"
+            vec4 resize_color(vec3 coords_curr_geo, vec3 size_curr_geo) {
+                vec3 coords_next_geo = niri_curr_geo_to_next_geo * coords_curr_geo;
+                vec3 coords_prev_geo = niri_curr_geo_to_prev_geo * coords_curr_geo;
+
+                vec3 coords_crop = niri_geo_to_tex_next * coords_next_geo;
+                vec3 coords_stretch = niri_geo_to_tex_next * coords_curr_geo;
+                vec3 coords_stretch_prev = niri_geo_to_tex_prev * coords_curr_geo;
+
+                bool can_crop_by_x = niri_curr_geo_to_next_geo[0][0] <= 1.0;
+                bool can_crop_by_y = niri_curr_geo_to_next_geo[1][1] <= 1.0;
+                bool crop = can_crop_by_x && can_crop_by_y;
+
+                vec4 color;
+
+                if (crop) {
+                    if (coords_curr_geo.x < 0.0 || 1.0 < coords_curr_geo.x ||
+                            coords_curr_geo.y < 0.0 || 1.0 < coords_curr_geo.y) {
+                        color = vec4(0.0);
+                    } else {
+                        color = texture2D(niri_tex_next, coords_crop.st);
+                    }
+                } else {
+                    color = texture2D(niri_tex_next, coords_stretch.st);
+                    vec4 color_prev = texture2D(niri_tex_prev, coords_stretch_prev.st);
+                    color = mix(color_prev, color, niri_clamped_progress);
+                }
+
+                return color;
+            }
+        "
+    }
+}
+
+// ============ WINDOW RULES ============
+window-rule {
+    match app-id=r"^org\.wezfurlong\.wezterm$"
+    open-maximized true
+}
+
+window-rule {
+    match app-id=r"firefox$" title="^Picture-in-Picture$"
+    open-floating true
+}
+
+window-rule {
+    geometry-corner-radius 6 // Увеличили закругление для красоты
+    clip-to-geometry true
+    opacity 0.65
+    background-effect {
+        blur true
+    }
+}
+
+window-rule {
+    match is-focused=true
+    background-effect {
+        blur true
+    }
+}
+
+// --- УКРАДЕНО: Защита приватности при записи экрана или стриме ---
+window-rule {
+    match app-id=r#"^org\.keepassxc\.KeePassXC$"#
+    match app-id=r#"^org\.telegram\.desktop$"#
+    match app-id=r#"^org\.mozilla\.firefox$"# title="- Gmail "
+    
+    block-out-from "screencast"
+}
+
+// ============ BINDS ============
+binds {
+    Mod+Shift+Slash { show-hotkey-overlay; }
+
+    // ---- apps ----
+    Mod+T hotkey-overlay-title="Open a Terminal: wezterm" { spawn "wezterm"; }
+    Mod+D { spawn-sh "vesktop"; }
+    Mod+E { spawn "thunar"; }
+    Mod+Z { spawn "AyuGram"; }
+    //Mod+W { spawn "flatpak" "run" "app.zen_browser.zen"; }
+    Mod+W { spawn "vivaldi"; }
+    Mod+K { spawn "kate"; }
+    Mod+M { spawn "pear-desktop"; }
+    F10 { spawn "qalculate-gtk"; }
+    F11 { spawn "thunderbird"; }
+
+    // ---- session / lock / dms panels ----
+    //Super+Alt+L hotkey-overlay-title="Lock the Screen: Dank Material Shell" { spawn "dms" "ipc" "call" "lock" "lock"; }
+    Super+Alt+L hotkey-overlay-title="Lock the Screen: Dank Material Shell" { spawn "lock-session-kori"; }
+    Super+Alt+S allow-when-locked=true hotkey-overlay-title=null { spawn-sh "pkill orca || exec orca"; }
+    Mod+S { spawn "dms" "ipc" "call" "launcher" "toggle"; }
+    Mod+Shift+Escape { spawn "dms" "ipc" "call" "powermenu" "toggle"; }
+    F12 { spawn "dms" "ipc" "call" "powermenu" "toggle"; }
+    Mod+C { spawn "dms" "ipc" "call" "control-center" "toggle"; }
+
+    // ---- audio / media / brightness ----
+    XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ -l 1.0"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"; }
+    XF86AudioMute allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
+    XF86AudioMicMute allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
+    XF86AudioPlay allow-when-locked=true { spawn-sh "playerctl play-pause"; }
+    XF86AudioStop allow-when-locked=true { spawn-sh "playerctl stop"; }
+    XF86AudioPrev allow-when-locked=true { spawn-sh "playerctl previous"; }
+    XF86AudioNext allow-when-locked=true { spawn-sh "playerctl next"; }
+    XF86MonBrightnessUp allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
+    XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
+    F9 { spawn "brightnessctl" "--class=leds" "set" "10%+"; }
+
+    // ---- window: close / overview / fullscreen ----
+    //Mod+C { center-column; }
+    Mod+Escape repeat=false { close-window; }
+    Mod+X { toggle-overview; }
+    Mod+F { switch-preset-column-width; }
+    Mod+Shift+F { fullscreen-window; }
+    F4  { fullscreen-window; }
+    Mod+Ctrl+F { expand-column-to-available-width; }
+    Mod+Ctrl+C { center-visible-columns; }
+
+    // ---- focus / move: columns + workspaces ----
+    Mod+Left  { focus-column-left; }
+    Mod+Right { focus-column-right; }
+    Mod+Up    { focus-workspace-up; }
+    Mod+Down  { focus-workspace-down; }
+    Mod+H     { focus-column-left; }
+    Mod+L     { focus-column-right; }
+    Mod+J     { focus-window-down; }
+
+    Mod+Ctrl+Left  { move-column-left; }
+    Mod+Ctrl+Right { move-column-right; }
+    Mod+Ctrl+Up    { move-window-up; }
+    Mod+Ctrl+Down  { move-window-down; }
+    Mod+Ctrl+H     { move-column-left; }
+    Mod+Ctrl+L     { move-column-right; }
+    Mod+Ctrl+J     { move-window-down; }
+    Mod+Ctrl+K     { move-window-up; }
+
+    Mod+Home { focus-column-first; }
+    Mod+End  { focus-column-last; }
+    Mod+Ctrl+Home { move-column-to-first; }
+    Mod+Ctrl+End  { move-column-to-last; }
+
+    // ---- monitors ----
+    Mod+Shift+Left  { focus-monitor-left; }
+    Mod+Shift+Right { focus-monitor-right; }
+    Mod+Shift+H     { focus-monitor-left; }
+    Mod+Shift+J     { focus-monitor-down; }
+    Mod+Shift+K     { focus-monitor-up; }
+    Mod+Shift+L     { focus-monitor-right; }
+
+    Mod+Shift+Ctrl+Left  { move-column-to-monitor-left; }
+    Mod+Shift+Ctrl+Right { move-column-to-monitor-right; }
+    Mod+Shift+Ctrl+Down  { move-column-to-monitor-down; }
+    Mod+Shift+Ctrl+Up    { move-column-to-monitor-up; }
+    Mod+Shift+Ctrl+H     { move-column-to-monitor-left; }
+    Mod+Shift+Ctrl+L     { move-column-to-monitor-right; }
+    Mod+Shift+Ctrl+J     { move-column-to-monitor-down; }
+    Mod+Shift+Ctrl+K     { move-column-to-monitor-up; }
+
+    // ---- workspaces (page keys) ----
+    Mod+Page_Down      { focus-workspace-down; }
+    Mod+Page_Up        { focus-workspace-up; }
+    Mod+U              { focus-workspace-down; }
+    Mod+I              { focus-workspace-up; }
+    Mod+Ctrl+Page_Down { move-column-to-workspace-down; }
+    Mod+Ctrl+Page_Up   { move-column-to-workspace-up; }
+    Mod+Ctrl+U         { move-column-to-workspace-down; }
+    Mod+Ctrl+I         { move-column-to-workspace-up; }
+    Mod+Shift+Page_Down { move-workspace-down; }
+    Mod+Shift+Page_Up   { move-workspace-up; }
+    Mod+Shift+U         { move-workspace-down; }
+    Mod+Shift+I         { move-workspace-up; }
+
+    // ---- mouse wheel ----
+    Mod+WheelScrollDown cooldown-ms=150 { focus-column-right; }
+    Mod+WheelScrollUp cooldown-ms=150 { focus-column-left; }
+    Mod+Ctrl+WheelScrollDown cooldown-ms=150 { move-column-to-workspace-down; }
+    Mod+Ctrl+WheelScrollUp cooldown-ms=150 { move-column-to-workspace-up; }
+    Mod+WheelScrollRight      { focus-column-right; }
+    Mod+WheelScrollLeft       { focus-column-left; }
+    Mod+Ctrl+WheelScrollRight { move-column-right; }
+    Mod+Ctrl+WheelScrollLeft  { move-column-left; }
+    Mod+Shift+WheelScrollDown      { focus-column-right; }
+    Mod+Shift+WheelScrollUp        { focus-column-left; }
+    Mod+Ctrl+Shift+WheelScrollDown { move-column-right; }
+    Mod+Ctrl+Shift+WheelScrollUp   { move-column-left; }
+
+    // ---- ИСПРАВЛЕНО: Рабочие переключатели окон по цифрам (без внешних скриптов) ----
+    Mod+1 { spawn "niri-focus" "1"; }
+    Mod+2 { spawn "niri-focus" "2"; }
+    Mod+3 { spawn "niri-focus" "3"; }
+    Mod+4 { spawn "niri-focus" "4"; }
+    Mod+5 { spawn "niri-focus" "5"; }
+    Mod+6 { spawn "niri-focus" "6"; }
+    Mod+7 { spawn "niri-focus" "7"; }
+    Mod+8 { spawn "niri-focus" "8"; }
+    Mod+9 { spawn "niri-focus" "9"; }
+    Mod+0 { spawn "niri-focus" "10"; }
+    Mod+Tab       { focus-workspace-down; }
+    Mod+Shift+Tab { focus-workspace-up; }
+
+    // Сделать текущую колонку ровно на половину экрана (50%)
+    //Mod+Alt+Left  { set-column-width "50%"; }
+    //Mod+Alt+Right { set-column-width "100%"; }
+
+    Mod+Ctrl+1 { move-column-to-workspace 1; }
+    Mod+Ctrl+2 { move-column-to-workspace 2; }
+    Mod+Ctrl+3 { move-column-to-workspace 3; }
+    Mod+Ctrl+4 { move-column-to-workspace 4; }
+    Mod+Ctrl+5 { move-column-to-workspace 5; }
+    Mod+Ctrl+6 { move-column-to-workspace 6; }
+    Mod+Ctrl+7 { move-column-to-workspace 7; }
+    Mod+Ctrl+8 { move-column-to-workspace 8; }
+    Mod+Ctrl+9 { move-column-to-workspace 9; }
+
+    // ---- columns: consume/expel ----
+    Mod+BracketLeft  { consume-or-expel-window-left; }
+    Mod+BracketRight { consume-or-expel-window-right; }
+    Mod+Comma  { consume-window-into-column; }
+    Mod+Period { expel-window-from-column; }
+
+    // ---- misc scripts ----
+    Mod+R { spawn-sh "~/.local/bin/toggle-virtmanager.sh"; }
+    Mod+A { spawn-sh "~/.local/bin/toggle-waydroid.sh"; }
+    Mod+Shift+R { switch-preset-window-height; }
+    Mod+Ctrl+R { reset-window-height; }
+
+    // ---- width / height fine adjust ----
+    Mod+Minus { set-column-width "-10%"; }
+    Mod+Equal { set-column-width "+10%"; }
+    Mod+Shift+Minus { set-window-height "-10%"; }
+    Mod+Shift+Equal { set-window-height "+10%"; }
+
+    // ---- floating ----
+    Mod+V       { toggle-window-floating; }
+    Mod+Shift+V { switch-focus-between-floating-and-tiling; }
+    Mod+Caps_Lock       { toggle-window-floating; }
+    Mod+Shift+Caps_Lock { maximize-column; }
+
+    // ---- keyboard layout switch ----
+    Mod+Space { switch-layout "next"; }
+
+    // ---- screenshot ----
+    Print { screenshot; }
+    Ctrl+Print { screenshot-screen; }
+    Alt+Print { screenshot-window; }
+
+    // ---- quit / power ----
+    Mod+Shift+E { quit; }
+    Ctrl+Alt+Delete { quit; }
+    Mod+Shift+P { power-off-monitors; }
+}
+
+// ============ OUTPUTS ============
+output "PNP(XXX) DP 000000000000" {
+    mode "1920x1080@165.002"
+    position x=0 y=0
+}
+output "PNP(KVL) CR270H 0000000000001" {
+    mode "1920x1080@180.000"
+    position x=1920 y=0
+}
+output "LG Electronics LG TV 0x01010101" {
+    mode "1920x1080@60"
+    position x=3840 y=0
+}
+output "eDP-1" {
+    variable-refresh-rate
+    mode "1366x768@60.003"
+    scale 1.0
+    transform "normal"
+    position x=0 y=0
+}
+
+// ============ EFFECTS ============
+blur {
+    saturation 3.500000000000002
+}
+
+environment {
+    QT_QPA_PLATFORM "wayland"
+    DISPLAY ":0"
+}
+
+// Блокировка при закрытии крышки ноутбука
+switch-events {
+    lid-close { spawn "dms" "ipc" "call" "lock" "lock"; }
+}
+
+// Блокировка строго ДО ухода в сон (используя swayidle)
+spawn-at-startup "swayidle" "-w" "before-sleep" "dms ipc call lock lock"
