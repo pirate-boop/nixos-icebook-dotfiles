@@ -60,6 +60,7 @@ layout {
 
 // ============ AUTOSTART ============
 //spawn-at-startup "dms" "run"
+
 spawn-at-startup "xwayland-satellite"
 spawn-at-startup "swayidle" "-w"
 
@@ -165,10 +166,10 @@ binds {
     //Super+Alt+L hotkey-overlay-title="Lock the Screen: Dank Material Shell" { spawn "dms" "ipc" "call" "lock" "lock"; }
     Super+Alt+L hotkey-overlay-title="Lock the Screen: Dank Material Shell" { spawn "lock-session-kori"; }
     Super+Alt+S allow-when-locked=true hotkey-overlay-title=null { spawn-sh "pkill orca || exec orca"; }
-    Mod+S { spawn "dms" "ipc" "call" "launcher" "toggle"; }
+    Mod+S { spawn "noctalia" "msg" "panel-toggle" "launcher"; }
     Mod+Shift+Escape { spawn "dms" "ipc" "call" "powermenu" "toggle"; }
-    F12 { spawn "dms" "ipc" "call" "powermenu" "toggle"; }
-    Mod+C { spawn "dms" "ipc" "call" "control-center" "toggle"; }
+    F12 { spawn "noctalia" "msg" "panel-toggle" "session"; }
+    Mod+C { spawn "noctalia" "msg" "panel-toggle" "control-center"; }
 
     // ---- audio / media / brightness ----
     XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ -l 1.0"; }
@@ -231,7 +232,7 @@ binds {
     Mod+Shift+Ctrl+H     { move-column-to-monitor-left; }
     Mod+Shift+Ctrl+L     { move-column-to-monitor-right; }
     Mod+Shift+Ctrl+J     { move-column-to-monitor-down; }
-    Mod+Shift+Ctrl+K     { move-column-to-monitor-up; }
+    hift+Ctrl+K     { move-column-to-monitor-up; }
 
     // ---- workspaces (page keys) ----
     Mod+Page_Down      { focus-workspace-down; }
@@ -242,10 +243,10 @@ binds {
     Mod+Ctrl+Page_Up   { move-column-to-workspace-up; }
     Mod+Ctrl+U         { move-column-to-workspace-down; }
     Mod+Ctrl+I         { move-column-to-workspace-up; }
-    Mod+Shift+Page_Down { move-workspace-down; }
-    Mod+Shift+Page_Up   { move-workspace-up; }
-    Mod+Shift+U         { move-workspace-down; }
-    Mod+Shift+I         { move-workspace-up; }
+    hift+Page_Down { move-workspace-down; }
+    hift+Page_Up   { move-workspace-up; }
+    hift+U         { move-workspace-down; }
+    hift+I         { move-workspace-up; }
 
     // ---- mouse wheel ----
     Mod+WheelScrollDown cooldown-ms=150 { focus-column-right; }
@@ -360,8 +361,8 @@ environment {
 
 // Блокировка при закрытии крышки ноутбука
 switch-events {
-    lid-close { spawn "dms" "ipc" "call" "lock" "lock"; }
+    lid-close { spawn "noctalia" "msg" "session" "lock"; }
 }
 
 // Блокировка строго ДО ухода в сон (используя swayidle)
-spawn-at-startup "swayidle" "-w" "before-sleep" "dms ipc call lock lock"
+spawn-at-startup "swayidle" "-w" "before-sleep" "noctalia msg session lock"
