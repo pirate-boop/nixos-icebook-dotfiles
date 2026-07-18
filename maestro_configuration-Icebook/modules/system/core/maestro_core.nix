@@ -11,6 +11,5 @@
     ./users.nix
     ./performance.nix
     ./bootloader.nix
-    ./permittedInsecurePackages-electron.nix
   ];
 }
