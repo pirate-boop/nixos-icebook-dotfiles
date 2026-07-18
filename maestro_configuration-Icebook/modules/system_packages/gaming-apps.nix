@@ -8,15 +8,15 @@
     # ── Лаунчеры ──────────────────────────────────
     #faugus-launcher
     #lutris
-    (symlinkJoin {
-     name = "heroic";
-     paths = [ heroic ];
-     buildInputs = [ makeWrapper ];
-     postBuild = ''
-      wrapProgram $out/bin/heroic \
-      --add-flags "--ozone-platform=x11"
-     ''; 
-    })
+    #(symlinkJoin {
+    # name = "heroic";
+    # paths = [ heroic ];
+    # buildInputs = [ makeWrapper ];
+    # postBuild = ''
+    #  wrapProgram $out/bin/heroic \
+    #  --add-flags "--ozone-platform=x11"
+    # ''; 
+    #})
     # heroic             # Epic / GOG
     #bottles
     #brotato
@@ -38,7 +38,7 @@
     xwayland-satellite
 
     # ── Эмуляция ──────────────────────────────────
-    ryubing # Experimental Nintendo Switch Emulator written in C# (community fork of Ryujinx)
+    # ryubing # Experimental Nintendo Switch Emulator written in C# (community fork of Ryujinx)
     # ryujinx — удалён из nixpkgs по DMCA в мае 2024
     # Альтернатива: суйка или сборка вручную
   ];
