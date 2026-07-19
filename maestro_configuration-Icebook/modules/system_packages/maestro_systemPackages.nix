@@ -20,7 +20,7 @@
     ./file-manager_tools.nix
     ./network_security.nix
     ./vpn_clients.nix
-    ./libreoffice.nix
+    #./libreoffice.nix
     #./zen-browser.nix
     ./nirimod.nix
     #./lfff.nix
