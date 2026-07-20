@@ -1,6 +1,6 @@
 { ... }: {
   imports = [
-    ./git.nix
+    ./git+jj.nix
     ./zsh.nix
     ./vscodium.nix
     ./starship.nix
