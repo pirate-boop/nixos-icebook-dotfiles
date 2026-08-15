@@ -53,14 +53,14 @@
   # 5. Интеграция с Delta (красивая подсветка изменений)
   programs.delta = {
     enable = true;
-    enableJujutsuIntegration = true; # Подключаем дельту к jj
+    enableJujutsuIntegration = false; # Подключаем дельту к jj
   };
 
   # 6. Интеграция с Mergiraf (умный синтаксический мерж конфликтов)
   # Уровень уверенности (Высокий): Опция из свежих релизов HM
   programs.mergiraf = {
     enable = true;
-    enableJujutsuIntegration = false; # Автоматически прописывает mergiraf как merge-tool для jj
+    enableJujutsuIntegration = true; # Автоматически прописывает mergiraf как merge-tool для jj
   };
 
   # 7. Интерактивный TUI интерфейс для JJ
