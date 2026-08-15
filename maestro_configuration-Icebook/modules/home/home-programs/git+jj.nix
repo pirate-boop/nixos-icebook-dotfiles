@@ -60,7 +60,7 @@
   # Уровень уверенности (Высокий): Опция из свежих релизов HM
   programs.mergiraf = {
     enable = true;
-    enableJujutsuIntegration = true; # Автоматически прописывает mergiraf как merge-tool для jj
+    enableJujutsuIntegration = false; # Автоматически прописывает mergiraf как merge-tool для jj
   };
 
   # 7. Интерактивный TUI интерфейс для JJ
