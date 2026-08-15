@@ -1,7 +1,7 @@
 # Разметка двух дисков. Серийники подставь свои: с флешки выполни ls /dev/disk/by-id
 let
-  disk1 = "/dev/nvme1n1"; # система: ESP 512M + swap 16G + корень xfs
-  disk2 = "/dev/nvme0n1"; # 300G под Windows (без форматирования) + остальное xfs в /data
+  disk1 = "/dev/disk/by-id/nvme-eui.0000000000000000c82d52500001968";  # TWSC 953.9G — система
+  disk2 = "/dev/disk/by-id/nvme-eui.00000000000000000026b73844346fd5";  # KINGSTON 931.5G — Windows+data
 in
 {
   disko.devices = {
