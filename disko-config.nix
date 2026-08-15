@@ -23,6 +23,7 @@
                 type = "filesystem";
                 format = "xfs";
                 mountpoint = "/";
+                mountOptions = [ "noatime" ];
               };
             };
           };
