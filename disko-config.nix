@@ -1,13 +1,10 @@
-# Разметка двух дисков. Серийники подставь свои: с флешки выполни ls /dev/disk/by-id
-let
-  disk1 = "/dev/disk/by-id/nvme-eui.0000000000000000c82d52500001968";  # TWSC 953.9G — система
-  disk2 = "/dev/disk/by-id/nvme-eui.00000000000000000026b73844346fd5";  # KINGSTON 931.5G — Windows+data
-in
+# Репродюсибельная разметка. disko знает ТОЛЬКО системный диск (по серийнику).
+# Второй диск с данными НЕ упоминается — его стирание невозможно.
 {
   disko.devices = {
     disk = {
       main = {
-        device = disk1;
+        device = "/dev/disk/by-id/nvme-eui.00000000000000000026b73844346fd5"; # KINGSTON SNV3S1000G 931.5G
         type = "disk";
         content = {
           type = "gpt";
@@ -32,29 +29,6 @@ in
                 type = "filesystem";
                 format = "xfs";
                 mountpoint = "/";
-                mountOptions = [ "noatime" ];
-              };
-            };
-          };
-        };
-      };
-      second = {
-        device = disk2;
-        type = "disk";
-        content = {
-          type = "gpt";
-          partitions = {
-            # Под Windows: создаётся, но НЕ форматируется — отформатирует установщик Windows
-            win = {
-              size = "300G";
-              type = "0700";
-            };
-            data = {
-              size = "100%";
-              content = {
-                type = "filesystem";
-                format = "xfs";
-                mountpoint = "/data";
                 mountOptions = [ "noatime" ];
               };
             };
