@@ -1,7 +1,6 @@
-{ nix.settings = {
-  substituters      = [ "https://nyx.chaotic.cx" "https://chaotic-nyx.cachix.org" ];
+nix.settings = {
+  substituters = [ "https://nyx-cache.chaotic.cx/" ];
   trusted-public-keys = [
-    "nyx.chaotic.cx-1:HfnXSw4pj95iI/n17rIDy40agF+kAdsR4UkfKKvv9Yg="
-    "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agF+kAdsR4UkfKKvv9Yg="
+    "nyx-cache.chaotic.cx:dJxTrgMC3V3cFfyIiBQDQorG6k1LsqurH/srpMSq7qk="
   ];
-}; }
+};
