@@ -6,7 +6,7 @@ appimageTools.wrapType2 rec {
 
   src = fetchurl {
     url = "https://github.com/zen-browser/desktop/releases/download/${version}/zen-x86_64.AppImage";
-    hash = ""; # первый билд упадёт и покажет правильный hash — вставь его сюда
+    hash = "sha256:dbcd14d59a2c368d11b7ec30f37e8401557d6e135d4f3627dfc38e0c1134045d";
   };
 
   extraPkgs = pkgs: with pkgs; [
