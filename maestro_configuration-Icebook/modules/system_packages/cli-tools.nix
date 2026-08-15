@@ -20,7 +20,7 @@
     libmtp
     simple-mtpfs
     android-tools
-    jmtpfs
+    #jmtpfs
     ntfs3g
     exfatprogs
     go-mtpfs
