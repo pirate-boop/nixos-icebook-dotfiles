@@ -26,6 +26,4 @@
       "gnunet"
     ];
   };
-  #users.users.kori.password = "donatwwww12";
-  #users.users.root.password = "donatwwww12";
 }
