@@ -19,7 +19,7 @@
     noctalia-greeter    = { url = "github:noctalia-dev/noctalia-greeter"; inputs.nixpkgs.follows = "nixpkgs"; };
     ttt.url             = "github:eugenioenko/ttt";                     
     bun2nix.url         = "github:nix-community/bun2nix";
-    ayugram-desktop     = { url = "github:ndfined-crp/ayugram-desktop"; inputs.nixpkgs.follows = "nixpkgs"; };
+    ayugram-desktop     = { url = "github:ndfined-crp/ayugram-desktop";
     mangowm             = { url = "github:mangowm/mango"; inputs.nixpkgs.follows = "nixpkgs"; };
     dms                 = { url = "github:AvengeMedia/DankMaterialShell/stable"; inputs.nixpkgs.follows = "nixpkgs"; };
   };
