@@ -13,6 +13,6 @@
     ./modules/modules-options/maestro_modules-options.nix                  # programs & services
     ./modules/modules-environment/maestro_modules-environment.nix            # env vars & XDG defaults
     ./modules/modules-aliases/maestro_modules-aliases.nix                    # aliases
-    ./modules/modules-home/maestro_modules-home.nix
+    #./modules/modules-home/maestro_modules-home.nix
   ];
 }
