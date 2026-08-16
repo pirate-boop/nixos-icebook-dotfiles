@@ -11,7 +11,7 @@
 
   home.username      = "kori";
   home.homeDirectory = "/home/kori";
-  home.stateVersion  = "25.11";
+  home.stateVersion  = "26.05";
   home.packages      = [];
   programs.home-manager.enable = true;
 }
