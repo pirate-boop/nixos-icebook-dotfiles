@@ -1,6 +1,6 @@
 {
    nix.settings = {
-     substitures = [
+     substituters = [
        "https://ayugram-desktop.cachix.org"
        "https://tg-owt.cachix.org"
      ];
