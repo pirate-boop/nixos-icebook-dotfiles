@@ -329,7 +329,7 @@ binds {
     Mod+Shift+P { power-off-monitors; }
 
     // === ОТКЛЮЧАЕМ ЛЕВЫЙ ВЕРХНИЙ УГОЛ ===
-    HotCornerTopLeft { null; }
+    //HotCornerTopLeft { null; }
 }
 
 // ============ OUTPUTS ============
