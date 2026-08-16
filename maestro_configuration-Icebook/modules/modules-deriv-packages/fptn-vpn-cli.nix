@@ -3,8 +3,8 @@
 let
   # Вот твои плавающие переменные. 
   # Выйдет новая версия — просто меняешь строки тут, и они сами подставятся ниже.
-  version = "0.4.0";
-  sha256 = "0914cc6d50eb5ac6c443aabfb05891fc20e0623d2db8d1296f0b28945eb0319f";
+  version = "0.4.3";
+  sha256 = "sha256:9f63f642fc286b5c61a3b2ffff4a3962009c3d99f1e4f560664864c69ae3b816";
 
   fptn-client-cli = pkgs.stdenv.mkDerivation {
     pname = "fptn-client-cli";
