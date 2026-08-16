@@ -1,4 +1,4 @@
-{ inputs, pkgs, config, ... }: {
+{ inputs, lib, pkgs, config, ... }: {
   imports = [
     ./home-programs/maestro_home-programs.nix
     ./home-xdg/maestro_home-xdg.nix
