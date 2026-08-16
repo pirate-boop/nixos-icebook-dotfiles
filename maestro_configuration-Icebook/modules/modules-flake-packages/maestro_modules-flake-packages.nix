@@ -1,6 +1,6 @@
 { ... }: {
   imports = [
-    ./ayugram.nix
+    #./ayugram.nix
     #./lfff.nix
     ./nirimod.nix
     ./scrcpy-gui.nix
