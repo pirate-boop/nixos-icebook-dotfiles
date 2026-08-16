@@ -1,5 +1,4 @@
-nix = {
-    settings = {
+nix.settings = {
         substitures = ["https://ayugram-desktop.cachix.org"];
         trusted-public-keys = [
             "ayugram-desktop.cachix.org-1:AZ5EqHrJsAKL5YkZYLPEsb1FdD9QlypUwQ0REcJftgA="
