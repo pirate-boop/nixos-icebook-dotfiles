@@ -13,13 +13,12 @@
     # sysc-greet          = { url = "github:Nomadcxx/sysc-greet"; inputs.nixpkgs.follows = "nixpkgs"; };
     lfff                = { url = "github:mrFrok/LibreFastbootFirmwareFlasher"; inputs.nixpkgs.follows = "nixpkgs"; };
     waydroid-script     = { url = "github:casualsnek/waydroid_script"; inputs.nixpkgs.follows = "nixpkgs"; };
-    anime-cursors.url   = "github:pirate-boop/anime-cursors";
+    anime-cursors       = { url = "github:pirate-boop/anime-cursors"; inputs.nixpkgs.follows = "nixpkgs"; };
     scrcpy-gui          = { url = "github:kil0bit-kb/scrcpy-gui"; inputs.nixpkgs.follows = "nixpkgs"; };
     noctalia            = { url = "github:noctalia-dev/noctalia"; inputs.nixpkgs.follows = "nixpkgs"; }; 
     noctalia-greeter    = { url = "github:noctalia-dev/noctalia-greeter"; inputs.nixpkgs.follows = "nixpkgs"; };
-    ttt.url             = "github:eugenioenko/ttt";
-    bun2nix.url         = "github:nix-community/bun2nix";
-
+    ttt                 = { url = "github:eugenioenko/ttt"; inputs.nixpkgs.follows = "nixpkgs"; };
+    bun2nix             = { url = "github:nix-community/bun2nix"; inputs.nixpkgs.follows = "nixpkgs"; };
     mangowm             = { url = "github:mangowm/mango"; inputs.nixpkgs.follows = "nixpkgs"; };
     dms                 = { url = "github:AvengeMedia/DankMaterialShell/stable"; inputs.nixpkgs.follows = "nixpkgs"; };
   };
