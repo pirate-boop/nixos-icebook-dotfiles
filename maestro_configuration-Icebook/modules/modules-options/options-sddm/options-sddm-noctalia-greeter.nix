@@ -8,7 +8,7 @@
       cursor = {
         theme = "FernBLZ";
         size = 24;
-        path = "${inputs.anime-cursors.packages.${pkgs.system}.FernBLZ}/share/icons";
+        path = "${inputs.anime-cursors.packages.${pkgs.stdenv.hostPlatform.system.}.FernBLZ}/share/icons";
       };
       keyboard = {
         layout = "us,ru";
