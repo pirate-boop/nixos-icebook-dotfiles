@@ -6,6 +6,7 @@
 { pkgs, ... }: {
   users.users.kori = {
     isNormalUser = true;
+    home = "/home/kori";
     description  = "Kori";
     shell        = pkgs.zsh;
     linger       = true;
