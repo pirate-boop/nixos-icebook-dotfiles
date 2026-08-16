@@ -7,12 +7,12 @@
 #****************************************************************#
 { config, pkgs, inputs, ... }: {
   imports = [
-    ./modules/system/maestro_system.nix                      # system core
-    ./modules/system-packages/maestro_system-packages.nix    # nixpkgs-packages
-    ./modules/flake-packages/maestro_flake-packages.nix      # flake-pkgs
-    ./modules/options/maestro_options.nix                  # programs & services
-    ./modules/system/fonts/maestro_fonts.nix                 # fonts
-    ./modules/environment/maestro_environment.nix            # env vars & XDG defaults
-    ./modules/aliases/maestro_aliases.nix                    # aliases
+    ./modules/modules-system/maestro_modules-system.nix                      # system core
+    ./modules/modules-system-packages/maestro_modules-system-packages.nix    # nixpkgs-packages
+    ./modules/modules-flake-packages/maestro_modules-flake-packages.nix      # flake-pkgs
+    ./modules/modules-options/maestro_modules-options.nix                  # programs & services
+    ./modules/modules-system/fonts/maestro_modules-fonts.nix                 # fonts
+    ./modules/modules-environment/maestro_modules-environment.nix            # env vars & XDG defaults
+    ./modules/modules-aliases/maestro_modules-aliases.nix                    # aliases
   ];
 }
