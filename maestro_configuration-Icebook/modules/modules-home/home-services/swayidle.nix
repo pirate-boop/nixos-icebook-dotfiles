@@ -1,12 +1,9 @@
 { pkgs, ... }: {
   services.swayidle = {
     enable = true;
-    events = [
-      {
-        event = "before-sleep";
-        command = "${pkgs.niri}/bin/niri msg action switch-layout 0; dms ipc call lock lock";
-      }
-    ];
+    events = {
+      before-sleep = "${pkgs.niri}/bin/niri msg action switch-layout 0; dms ipc call lock lock";
+    };
     timeouts = [
       {
         timeout = 300;
