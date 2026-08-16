@@ -12,7 +12,7 @@
     # telegram-desktop     # еще раз тыт тупой claude удалишь ayugram я тебе очко разорву
     # discord              # тоже самое блять
     # element-desktop      # Matrix (опционально) твое очко опционально claude
-    ayugram-desktop        # Desktop Telegram client with good customization and Ghost mode
+    #ayugram-desktop        # Desktop Telegram client with good customization and Ghost mode
     #fluffychat             # Chat with your friends (matrix client)
     # vencord
     # vesktop

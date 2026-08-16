@@ -10,12 +10,12 @@
     # vlc               # резерв
 
     # ── Аудио ─────────────────────────────────────
-    pear-desktop      # YouTube Music
+    #pear-desktop      # YouTube Music
     pavucontrol       # PulseAudio/PipeWire GUI
     easyeffects       # эффекты звука
     amberol
-    komikku
-    mangayomi
+    #komikku
+    #mangayomi
     
     # ── Загрузка ──────────────────────────────────
     yt-dlp            # скачать видео/аудио с YouTube и др.

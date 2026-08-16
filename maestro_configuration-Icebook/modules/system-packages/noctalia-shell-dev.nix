@@ -1,4 +1,4 @@
-{ inputs, pkgs, ... }: # Убедись, что на входе в файл есть inputs!
+{ inputs, pkgs, ... }:
 {
   environment.systemPackages = [
     # Вместо старого pkgs.noctalia-qs пишем это:

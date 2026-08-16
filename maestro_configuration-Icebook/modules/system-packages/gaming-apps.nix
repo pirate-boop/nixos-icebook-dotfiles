@@ -38,8 +38,6 @@
     xwayland-satellite
 
     # ── Эмуляция ──────────────────────────────────
-    # ryubing # Experimental Nintendo Switch Emulator written in C# (community fork of Ryujinx)
-    # ryujinx — удалён из nixpkgs по DMCA в мае 2024
-    # Альтернатива: суйка или сборка вручную
+    ryubing # Experimental Nintendo Switch Emulator written in C# (community fork of Ryujinx)
   ];
 }
