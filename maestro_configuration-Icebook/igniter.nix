@@ -10,8 +10,9 @@
     ./modules/modules-system/maestro_modules-system.nix                      # system core
     ./modules/modules-system-packages/maestro_modules-system-packages.nix    # nixpkgs-packages
     ./modules/modules-flake-packages/maestro_modules-flake-packages.nix      # flake-pkgs
-    ./modules/modules-options/maestro_modules-options.nix                  # programs & services
+    ./modules/modules-options/maestro_modules-options.nix                    # programs & services
     ./modules/modules-environment/maestro_modules-environment.nix            # env vars & XDG defaults
     ./modules/modules-aliases/maestro_modules-aliases.nix                    # aliases
+    ./modules/modules-deriv-packages/maestro_modules-deriv-packages.nix      # deriv packages
   ];
 }
