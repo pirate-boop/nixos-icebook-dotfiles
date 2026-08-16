@@ -1,3 +1,4 @@
+{
 nix.settings = {
         substitures = ["https://ayugram-desktop.cachix.org"];
         trusted-public-keys = [
@@ -7,3 +8,5 @@ nix.settings = {
     extra-substitures = ["https://tg-owt.cachix.org"];
     extra-trusted-public-keys = [
         "tg-owt.cachix.org-1:lp0BukIhSK3EIyLcDhDZ5zAB0wr8w="        
+    ];
+};
