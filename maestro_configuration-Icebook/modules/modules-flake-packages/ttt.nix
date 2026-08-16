@@ -1,6 +1,1 @@
-{ pkgs, inputs, ... }: {
-  environment.systemPackages = [
-    # Вытягиваем дефолтный пакет из флейка ttt под архитектуру твоего процессора
-    inputs.ttt.packages.${pkgs.system}.default
-  ];
-}
+{ inputs, pkgs, ... }: { environment.systemPackages = [ inputs.ttt.packages.${pkgs.stdenv.hostPlatform.system}.default ]; }

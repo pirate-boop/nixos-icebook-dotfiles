@@ -1,7 +1,6 @@
 { config, pkgs, inputs, lib, ... }: {
 
 
-  # git нужен для флейков
   environment.systemPackages = [ pkgs.git ];
 
   nix =
