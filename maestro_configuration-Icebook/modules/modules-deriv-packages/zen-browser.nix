@@ -12,7 +12,7 @@
       };
 
       nativeBuildInputs = with pkgs; [
-        autoPatchelfHook makeWrapper wrapGAppsHook
+        autoPatchelfHook makeWrapper wrapGAppsHook3
       ];
 
       buildInputs = with pkgs; [

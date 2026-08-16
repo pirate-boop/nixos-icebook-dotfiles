@@ -19,6 +19,6 @@
     ./helix.nix
     # ./hyprland.nix
     ./noctalia-shell-cache.nix
-    ./ayugram-desktop.nix
+    #./ayugram-desktop.nix
   ];
 }

@@ -6,7 +6,7 @@
      ];
      trusted-public-keys = [
        "ayugram-desktop.cachix.org-1:AZ5EqHrJsAKL5YkZYLPEsb1FdD9QlypUwQ0REcJftgA="
-       "tg-owt.cachix.org-1:lp0BukIhSK3EIyLcDhDZ5zAB0wr8w="
+       "tg-owt.cachix.org-1:lp0BukIhSK3EIyLcDhDZ5zABgT48nmNp6t4SnZ0wr8w="
      ];
    };
 }   
