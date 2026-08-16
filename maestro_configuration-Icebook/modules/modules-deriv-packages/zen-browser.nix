@@ -36,6 +36,7 @@
 , icu
 , sqlite
 , gtk4
+, ...
 }:
 
 stdenv.mkDerivation rec {
