@@ -10,7 +10,7 @@
   ];
 
   home.username      = "kori";
-  home.homeDirectory = lib.mkForce"/home/kori";
+  home.homeDirectory = "/home/kori";
   home.stateVersion  = "26.05";
   home.packages      = [];
   programs.home-manager.enable = true;
