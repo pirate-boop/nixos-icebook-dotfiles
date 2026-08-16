@@ -2,7 +2,7 @@
   environment.systemPackages = with pkgs; [
     # htop                   # Interactive process viewer
     htop-vim                 # Interactive process viewer, with vim-style keybindings
-    btop                     # Monitor of resources
+    #btop                     # Monitor of resources
     # bottom                   # Cross-platform graphical process/system monitor with a customizable interface
     fastfetch                # Actively maintained, feature-rich and performance oriented, neofetch like system information tool
     # zigfetch                 # Minimal neofetch/fastfetch like system information tool
