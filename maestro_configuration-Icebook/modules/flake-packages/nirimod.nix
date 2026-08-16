@@ -1,5 +1,5 @@
 {inputs, pkgs, ... }: {
     environment.systemPackages = [
-        input.nirimod.packages.${pkgs.system}.default
+        inputs.nirimod.packages.${pkgs.system}.default
     ];
 }
