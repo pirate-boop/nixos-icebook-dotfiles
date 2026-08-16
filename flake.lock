@@ -18,7 +18,7 @@
         "type": "github"
       }
     },
-    "ayugram": {
+    "ayugram-desktop": {
       "inputs": {
         "nixpkgs": [
           "nixpkgs"
@@ -26,11 +26,11 @@
         "tg_owt": "tg_owt"
       },
       "locked": {
-        "lastModified": 1786262190,
-        "narHash": "sha256-siQOmiooWvCwHiIXbxvA15AG09uDke2XsCHSPA3cqXs=",
+        "lastModified": 1786871475,
+        "narHash": "sha256-3fe2SP2B+TpNokmOX29Leap5eMbZ/LqSJJVAdDJiAiY=",
         "owner": "ndfined-crp",
         "repo": "ayugram-desktop",
-        "rev": "db153447270907a2752285001b4369d9b8c1e395",
+        "rev": "e9827abe91fc6554740dee590dea03da57b5bb8c",
         "type": "github"
       },
       "original": {
@@ -607,7 +607,7 @@
     "root": {
       "inputs": {
         "anime-cursors": "anime-cursors",
-        "ayugram": "ayugram",
+        "ayugram-desktop": "ayugram-desktop",
         "bun2nix": "bun2nix",
         "chaotic": "chaotic",
         "disko": "disko",
@@ -764,16 +764,16 @@
     "tg_owt": {
       "inputs": {
         "nixpkgs": [
-          "ayugram",
+          "ayugram-desktop",
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1786180255,
-        "narHash": "sha256-9h4NMCjk7fcFDEA38Wd+tw7xg4GNRPu23NSCKq165Jg=",
+        "lastModified": 1786240588,
+        "narHash": "sha256-DWh/h7iwocR2ZTLT0RFpxZQYF98G+2fqhEpuK1/OAP8=",
         "owner": "ndfined-crp",
         "repo": "tg_owt",
-        "rev": "bd3a28efa979e2d26161573817afbdb582ff861f",
+        "rev": "809e550ad27e704ff21a344e565c2909ae403499",
         "type": "github"
       },
       "original": {
