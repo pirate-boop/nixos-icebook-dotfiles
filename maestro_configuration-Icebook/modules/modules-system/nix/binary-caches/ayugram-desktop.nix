@@ -10,3 +10,4 @@ nix.settings = {
         "tg-owt.cachix.org-1:lp0BukIhSK3EIyLcDhDZ5zAB0wr8w="        
     ];
 };
+}
