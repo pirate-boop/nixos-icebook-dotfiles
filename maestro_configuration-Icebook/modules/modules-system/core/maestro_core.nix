@@ -11,5 +11,6 @@
     ./users.nix
     ./performance.nix
     ./bootloader.nix
+    ./bcachefs.nix
   ];
 }
