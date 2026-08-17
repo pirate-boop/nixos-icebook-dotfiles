@@ -1,12 +1,11 @@
-#****************************************************************#
+#****************#
 # |============================================================| #
 # |USER ACCOUNT                                                | #
 # |============================================================| #
-#****************************************************************#
+#****************#
 { pkgs, ... }: {
   users.users.kori = {
     isNormalUser = true;
-    #home = "/home/kori";
     description  = "Kori";
     shell        = pkgs.zsh;
     linger       = true;
@@ -26,5 +25,15 @@
       "plugdev"
       "gnunet"
     ];
+  };
+
+  # /etc/nixos всегда принадлежит юзеру: на каждом boot и каждом
+  # nixos-rebuild switch права принудительно возвращаются,
+  # даже если какой-то sudo-скрипт сделал папку root-овской
+  system.activationScripts.etcNixosOwnership = {
+    deps = [ "etc" "users" ];
+    text = ''
+      chown -R kori:users /etc/nixos || true
+    '';
   };
 }
