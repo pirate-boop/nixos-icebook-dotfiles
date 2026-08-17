@@ -36,5 +36,6 @@
         packages.iso = inputs.nixpkgs.legasyPackages.x86_64-linux.nixos [
           "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
           ./maestro_configuration-Icebook/modukes/modules-system/core/bcachefs.nix
+        ];
     };
 }
