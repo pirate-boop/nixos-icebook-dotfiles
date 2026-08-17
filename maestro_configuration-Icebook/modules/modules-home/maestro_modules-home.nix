@@ -7,6 +7,7 @@
     ./home-symlinks/maestro_home-symlinks.nix
     ./home-variables/maestro_home-variables.nix
     ./home-xdg-desktop-app/maestro_home-xdg-desktop-app.nix
+    ./home-ctrl/maestro_home-ctrl.nix
   ];
 
   home.username      = "kori";
