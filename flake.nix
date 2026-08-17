@@ -32,11 +32,18 @@
       ];
       systems = [ "x86_64-linux" ];
       
-      perSystem = {pkgs, ... }: {
-        packages.iso = inputs.nixpkgs.legasyPackages.x86_64-linux.nixos [
-          "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
-          ./maestro_configuration-Icebook/modukes/modules-system/core/bcachefs.nix
-        ];
+      flake = {
+        nixosConfigurations.iso = inputs.nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
+            ({ pkgs, ... }: {
+              boot.supportedFilesystems = [ "bcachefs" ];
+              boot.initrd.supportedFilesystems = [ "bcachefs" ];
+              environment.systemPackages = [ pkgs.bcachefs-tools ];
+            })
+          ];
+        };
       };
     };
 }
