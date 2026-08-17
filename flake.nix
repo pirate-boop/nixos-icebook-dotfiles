@@ -37,5 +37,6 @@
           "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
           ./maestro_configuration-Icebook/modukes/modules-system/core/bcachefs.nix
         ];
+      };
     };
-};
+}
