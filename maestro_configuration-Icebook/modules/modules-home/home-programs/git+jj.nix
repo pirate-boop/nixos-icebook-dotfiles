@@ -28,7 +28,7 @@
         email = "pirate-boop@users.noreply.github.com";
       };
       git = {
-        private-commits = "none";
+        private-commits = "none()";
       };
       ui = {
         editor = "editor";
