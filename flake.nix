@@ -38,4 +38,4 @@
           ./maestro_configuration-Icebook/modukes/modules-system/core/bcachefs.nix
         ];
     };
-}
+};
