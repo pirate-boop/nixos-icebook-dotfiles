@@ -1,6 +1,6 @@
 { ... }: {
   imports = [
-    ./maestro_jj-ctrl.nix
-    ./maestro_nix-ctrl.nix
+    ./jj-ctrl/maestro_jj-ctrl.nix
+    ./nix-ctrl/maestro_nix-ctrl.nix
   ];
 }
