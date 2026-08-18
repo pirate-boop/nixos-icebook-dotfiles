@@ -27,7 +27,7 @@ let
     owner = "mrFrok";
     repo = "LibreFastbootFirmwareFlasher";
     rev = "v${version}";
-    hash = "sha256-PLACEHOLDER"; # <-- Сюда вставишь реальный хеш из ошибки
+    hash = ""; # <-- Сюда вставишь реальный хеш из ошибки
   };
 in
 pkgs.stdenvNoCC.mkDerivation {
