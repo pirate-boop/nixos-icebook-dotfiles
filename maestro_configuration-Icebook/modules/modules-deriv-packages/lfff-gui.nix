@@ -1,4 +1,5 @@
-{ pkgs }:
+# modules-deriv-packages/lfff-gui.nix
+{ pkgs, ... }:
 
 let
   version = "2.6.0";
@@ -40,7 +41,6 @@ pkgs.stdenvNoCC.mkDerivation {
   };
 
   nativeBuildInputs = with pkgs; [ autoPatchelfHook makeWrapper ];
-  
   inherit buildInputs;
 
   unpackPhase = ''
@@ -56,10 +56,16 @@ pkgs.stdenvNoCC.mkDerivation {
     install -Dm644 ${assets}/lfff-gui.desktop $out/share/applications/lfff-gui.desktop
     install -Dm644 ${assets}/lfff-gui.svg $out/share/icons/hicolor/scalable/apps/lfff-gui.svg
 
-    # ВОТ ЗДЕСЬ ДОБАВЛЕН LD_LIBRARY_PATH для динамической подгрузки wayland/x11
+    # GOD-TIER WRAP:
+    # 1. Чиним шрифты
+    # 2. Чиним библиотеки (autoPatchelfHook + LD_LIBRARY_PATH)
+    # 3. Даём программе готовые, рабочие версии payload_dumper, aria2 и fastboot/adb
+    # 4. Гасим конфликт версий protobuf в payload_dumper
     wrapProgram $out/bin/lfff-gui \
       --set FONTCONFIG_FILE ${pkgs.fontconfig.out}/etc/fonts/fonts.conf \
-      --prefix LD_LIBRARY_PATH : ${pkgs.lib.makeLibraryPath buildInputs}
+      --prefix LD_LIBRARY_PATH : ${pkgs.lib.makeLibraryPath buildInputs} \
+      --prefix PATH : ${pkgs.lib.makeBinPath [ pkgs.payload_dumper pkgs.aria2 pkgs.android-tools ]} \
+      --set PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION python
 
     runHook postInstall
   '';
@@ -71,5 +77,5 @@ pkgs.stdenvNoCC.mkDerivation {
     platforms = platforms.linux;
     mainProgram = "lfff-gui";
     sourceProvenance = with sourceTypes; [ binaryNativeCode ];
-  };
+.  };
 }
