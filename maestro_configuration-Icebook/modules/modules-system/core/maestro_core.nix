@@ -12,5 +12,6 @@
     ./performance.nix
     ./bootloader.nix
     ./bcachefs.nix
+    ./extra-disks.nix
   ];
 }
