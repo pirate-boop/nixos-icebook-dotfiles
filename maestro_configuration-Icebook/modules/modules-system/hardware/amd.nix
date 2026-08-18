@@ -35,8 +35,6 @@
   # RDNA3 tweaks
   boot.kernelParams = [
     "amdgpu.dcdebugmask=0x40010"
-    #"amdgpu.dcdebugmask=0x40000"
-    #"amdgpu.dcdebugmask=0x10" # меньше графических артефактов на некоторых ноутбуках
     "amdgpu.gttsize=8192" # больше shared memory под iGPU
     "threadirqs" # чуть лучше latency/input responsiveness
   ];
