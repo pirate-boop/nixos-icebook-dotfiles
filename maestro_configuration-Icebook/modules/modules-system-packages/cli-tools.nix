@@ -32,7 +32,8 @@
     vulkan-tools
     mesa-demos
     payload_dumper
-    coreutils
+    #coreutils
+    uutils-coreutils
     xxd
   ];
 }
