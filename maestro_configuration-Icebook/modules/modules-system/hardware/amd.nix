@@ -30,19 +30,15 @@
     ];
   };
 
-  # Микрокод CPU
+  # Microcode CPU
   hardware.cpu.amd.updateMicrocode = true;
   # RDNA3 tweaks
   boot.kernelParams = [
-
-    # меньше графических артефактов на некоторых ноутбуках
-    "amdgpu.dcdebugmask=0x10"
-
-    # больше shared memory под iGPU
-    "amdgpu.gttsize=8192"
-
-    # чуть лучше latency/input responsiveness
-    "threadirqs"
+    "amdgpu.dcdebugmask=0x40010"
+    #"amdgpu.dcdebugmask=0x40000"
+    #"amdgpu.dcdebugmask=0x10" # меньше графических артефактов на некоторых ноутбуках
+    "amdgpu.gttsize=8192" # больше shared memory под iGPU
+    "threadirqs" # чуть лучше latency/input responsiveness
   ];
 
   # Mesa / RADV env vars

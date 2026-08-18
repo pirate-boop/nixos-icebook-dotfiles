@@ -13,7 +13,7 @@
       efiSysMountPoint = "/boot";       # явно указываем, нужно для GRUB
     };
 
-    timeout = 5;                        # 5 сек на выбор (тема красивая, есть что посмотреть)
+    timeout = 10;                        # 5 сек на выбор (тема красивая, есть что посмотреть)
 
     systemd-boot.enable = false;        # выключаем systemd-boot
 
