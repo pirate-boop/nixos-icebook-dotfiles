@@ -20,6 +20,7 @@ let
     alsa-lib
     dbus
     openssl
+    stdenv.cc.cc.lib
   ];
 
   # ИСПРАВЛЕНИЕ: assets вынесен в let, теперь ${assets} в installPhase его увидит
