@@ -57,15 +57,15 @@ pkgs.stdenvNoCC.mkDerivation {
     install -Dm644 ${assets}/lfff-gui.svg $out/share/icons/hicolor/scalable/apps/lfff-gui.svg
 
     # GOD-TIER WRAP:
-    # 1. Чиним шрифты
-    # 2. Чиним библиотеки (autoPatchelfHook + LD_LIBRARY_PATH)
-    # 3. Даём программе готовые, рабочие версии payload_dumper, aria2 и fastboot/adb
-    # 4. Гасим конфликт версий protobuf в payload_dumper
+    # 1. Чиним шрифты и библиотеки (autoPatchelfHook + LD_LIBRARY_PATH)
+    # 2. Подсовываем payload-dumper-go (Go), aria2 и android-tools.
+    #    МЫ НАМЕРЕННО НЕ ИСПОЛЬЗУЕМ pkgs.payload_dumper (Python), 
+    #    так как он несовместим с аргументами Rust-приложения и ломается на protobuf >= 4.0.
+    #    Приложение само извлечёт payload.bin и скормит его Go-версии.
     wrapProgram $out/bin/lfff-gui \
       --set FONTCONFIG_FILE ${pkgs.fontconfig.out}/etc/fonts/fonts.conf \
       --prefix LD_LIBRARY_PATH : ${pkgs.lib.makeLibraryPath buildInputs} \
-      --prefix PATH : ${pkgs.lib.makeBinPath [ pkgs.payload_dumper pkgs.aria2 pkgs.android-tools ]} \
-      --set PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION python
+      --prefix PATH : ${pkgs.lib.makeBinPath [ pkgs.payload-dumper-go pkgs.aria2 pkgs.android-tools ]}
 
     runHook postInstall
   '';
@@ -77,5 +77,5 @@ pkgs.stdenvNoCC.mkDerivation {
     platforms = platforms.linux;
     mainProgram = "lfff-gui";
     sourceProvenance = with sourceTypes; [ binaryNativeCode ];
-   };
+  };
 }
