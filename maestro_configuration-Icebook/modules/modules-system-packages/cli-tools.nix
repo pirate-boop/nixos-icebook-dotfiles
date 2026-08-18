@@ -31,7 +31,7 @@
     trash-cli
     vulkan-tools
     mesa-demos
-    payload_dumper-go
+    payload-dumper-go
     #coreutils
     uutils-coreutils
     xxd
