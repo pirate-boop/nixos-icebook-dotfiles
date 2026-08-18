@@ -77,5 +77,5 @@ pkgs.stdenvNoCC.mkDerivation {
     platforms = platforms.linux;
     mainProgram = "lfff-gui";
     sourceProvenance = with sourceTypes; [ binaryNativeCode ];
-.  };
+   };
 }
