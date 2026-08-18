@@ -1,1 +1,1 @@
-{ ... }: { home.sessionVariables.VISUAL = "zeditor"; }
+{ ... }: { home.sessionVariables.VISUAL = "ttt"; }

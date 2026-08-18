@@ -1,1 +1,1 @@
-{ ... }: { home.sessionVariables.TERMINAL = "ghostty"; }
+{ ... }: { home.sessionVariables.TERMINAL = "wezterm"; }
