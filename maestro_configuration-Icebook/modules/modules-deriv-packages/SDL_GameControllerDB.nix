@@ -15,7 +15,7 @@
 
   environment.systemPackages = with pkgs; [
     antimicrox
-    sdl2
+    SDL2
   ];
 
   # Ship a current SDL_GameControllerDB so any pad (including less common
