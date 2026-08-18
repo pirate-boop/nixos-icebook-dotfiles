@@ -7,7 +7,7 @@
 
     # ── Лаунчеры ──────────────────────────────────
     #faugus-launcher
-    #lutris
+    lutris
     #(symlinkJoin {
     # name = "heroic";
     # paths = [ heroic ];
@@ -17,8 +17,8 @@
     #  --add-flags "--ozone-platform=x11"
     # ''; 
     #})
-    # heroic             # Epic / GOG
-    #bottles
+    heroic             # Epic / GOG
+    bottles
     #brotato
 
     # ── Мониторинг производительности ─────────────
