@@ -36,4 +36,13 @@
       chown -R kori:users /etc/nixos || true
     '';
   };
+
+  # data-диск всегда принадлежит юзеру: переживает ребилды и
+  # автоматически чинится после переформатирования
+  system.activationScripts.dataOwnership = {
+    deps = [ "etc" "users" ];
+    text = ''
+      chown kori:users /mnt/nvme0n1/data || true
+    '';
+  };
 }
