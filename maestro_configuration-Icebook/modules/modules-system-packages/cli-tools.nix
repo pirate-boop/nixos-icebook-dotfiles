@@ -35,5 +35,9 @@
     #coreutils
     uutils-coreutils
     xxd
+    parted
+    gparted
+    kdePackages.partitionmanager
+    gnome-disk-utility
   ];
 }
