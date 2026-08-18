@@ -24,7 +24,7 @@
   environment.etc."sdl/gamecontrollerdb.txt".source =
     pkgs.fetchurl {
       url = "https://raw.githubusercontent.com/mdqinc/SDL_GameControllerDB/master/gamecontrollerdb.txt";
-      sha256 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      sha256 = "";
     };
 
   environment.sessionVariables.SDL_GAMECONTROLLERCONFIG_FILE =
