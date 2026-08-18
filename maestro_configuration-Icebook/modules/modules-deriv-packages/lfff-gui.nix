@@ -23,12 +23,11 @@ let
     stdenv.cc.cc.lib
   ];
 
-  # ИСПРАВЛЕНИЕ: assets вынесен в let, теперь ${assets} в installPhase его увидит
   assets = pkgs.fetchFromGitHub {
     owner = "mrFrok";
     repo = "LibreFastbootFirmwareFlasher";
     rev = "v${version}";
-    hash = "sha256-mI4s4X/npYgQPn4HBpOi6pokg71yQ4aQozx/Qqg5eq8="; # <-- Сюда вставишь реальный хеш из ошибки
+    hash = "sha256-mI4s4X/npYgQPn4HBpOi6pokg71yQ4aQozx/Qqg5eq8=";
   };
 in
 pkgs.stdenvNoCC.mkDerivation {
@@ -57,8 +56,10 @@ pkgs.stdenvNoCC.mkDerivation {
     install -Dm644 ${assets}/lfff-gui.desktop $out/share/applications/lfff-gui.desktop
     install -Dm644 ${assets}/lfff-gui.svg $out/share/icons/hicolor/scalable/apps/lfff-gui.svg
 
+    # ВОТ ЗДЕСЬ ДОБАВЛЕН LD_LIBRARY_PATH для динамической подгрузки wayland/x11
     wrapProgram $out/bin/lfff-gui \
-      --set FONTCONFIG_FILE ${pkgs.fontconfig.out}/etc/fonts/fonts.conf
+      --set FONTCONFIG_FILE ${pkgs.fontconfig.out}/etc/fonts/fonts.conf \
+      --prefix LD_LIBRARY_PATH : ${pkgs.lib.makeLibraryPath buildInputs}
 
     runHook postInstall
   '';
