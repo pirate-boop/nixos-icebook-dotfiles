@@ -39,6 +39,5 @@
     gparted
     kdePackages.partitionmanager
     gnome-disk-utility
-    agenix
   ];
 }
