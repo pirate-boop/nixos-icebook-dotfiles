@@ -7,7 +7,7 @@
   environment.systemPackages = [
     # Вызываем наш файл как функцию, передавая ему pkgs
     (pkgs.callPackage ./lfff-gui.nix { })
-    (pkgs.callPackage ./modules-deriv-packages/fptn-vpn-gui.nix { })
+    (pkgs.callPackage ./fptn-vpn-gui.nix { })
     
   ];
 }
