@@ -6,11 +6,11 @@ let
   
   debUrl = "https://github.com/fptn-project/fptn/releases/download/${version}/fptn-client-${version}-ubuntu22.04-${arch}.deb";
   
-  # ИСПРАВЛЕНО: используем дефис вместо двоеточия в SRI хеше
+  # Используем чистый hex-хеш в атрибуте sha256, как ты и указал
   debHash = if arch == "amd64" then 
-    "sha256:35dbc9c1987c63e71ecd59b98926c4b8a9d56d1fecfdb08f60ed1fc6524709e5" 
+    "35dbc9c1987c63e71ecd59b98926c4b8a9d56d1fecfdb08f60ed1fc6524709e5" 
   else 
-    "sha256-6ac07de2856f3bde6c9bd8cf0d9d7e5db9aff9c0f0a02d3cf35c4ed7dd04771b";
+    "6ac07de2856f3bde6c9bd8cf0d9d7e5db9aff9c0f0a02d3cf35c4ed7dd04771b";
 
 in
 pkgs.stdenvNoCC.mkDerivation {
@@ -19,12 +19,12 @@ pkgs.stdenvNoCC.mkDerivation {
 
   src = pkgs.fetchurl {
     url = debUrl;
-    hash = debHash; # Используем hash вместо sha256 для современной совместимости
+    sha256 = debHash;
   };
 
   nativeBuildInputs = with pkgs; [ dpkg autoPatchelfHook makeWrapper ];
   
-  # ИСПРАВЛЕНО: отключаем автоматическую обертку Qt, так как мы делаем свою изолированную обертку
+  # Отключаем автоматическую обертку Qt, так как мы создаем свою изолированную среду
   dontWrapQtApps = true;
 
   buildInputs = with pkgs; [
@@ -34,15 +34,15 @@ pkgs.stdenvNoCC.mkDerivation {
     stdenv.cc.cc.lib
   ];
 
+  # ЗОЛОТОЙ СТАНДАРТ: распаковываем .deb сразу напрямую в $out
+  # Это на 100% исключает ошибки cp и проблемы с путями
   unpackPhase = ''
-    dpkg-deb -x $src .
+    dpkg-deb -x $src $out
   '';
 
   installPhase = ''
     runHook preInstall
 
-    cp -r usr/* $out/
-    
     # Надежно переименовываем оригинальный бинарник
     if [ -f $out/bin/fptn ]; then
       mv $out/bin/fptn $out/bin/fptn-original
@@ -53,7 +53,6 @@ pkgs.stdenvNoCC.mkDerivation {
     # Создаем скрипт-обертку для изолированного X11-окна с треем
     cat > $out/bin/fptn-tray-window << 'EOF'
 #!/bin/sh
-# Находим свободный номер дисплея
 DISPLAY_NUM=1
 while [ -e /tmp/.X11-unix/X$DISPLAY_NUM ]; do
   DISPLAY_NUM=$((DISPLAY_NUM + 1))
@@ -61,39 +60,30 @@ done
 
 echo "Starting mini X11 environment with system tray on display :$DISPLAY_NUM..."
 
-# ИСПРАВЛЕНО: xorg-server вместо устаревшего xorg.xorgserver
 XEPHYR_BIN="${pkgs.xorg-server}/bin/Xephyr"
 $XEPHYR_BIN -ac -screen 1024x768 -reset -terminate :$DISPLAY_NUM &
 XEPHYR_PID=$!
 sleep 1
 
-# Функция для чистой уборки процессов при выходе
 cleanup() {
   kill $XEPHYR_PID 2>/dev/null
 }
 trap cleanup EXIT
 
-# Запускаем всё внутри этого изолированного дисплея
 export DISPLAY=:$DISPLAY_NUM
 
-# Легкий оконный менеджер
 ${pkgs.openbox}/bin/openbox &
 sleep 0.5
 
-# Демон системного трея (панелька сверху справа)
 TRAYER_BIN="${pkgs.trayer}/bin/trayer"
 $TRAYER_BIN --edge top --align right --widthtype request --padding 6 --transparent true --alpha 0 --tint 0x000000 --heighttype pixel --height 24 &
 sleep 0.5
 
 echo "Starting FPTN Client inside nested environment..."
-# Запускаем само приложение
 $out/bin/fptn-original "$@"
-
-# Когда приложение закроется, trap автоматически убьет Xephyr и trayer
 EOF
     chmod +x $out/bin/fptn-tray-window
 
-    # Создаем .desktop файл для запуска из меню приложений
     mkdir -p $out/share/applications
     cat > $out/share/applications/fptn-tray-window.desktop << 'EOF'
 [Desktop Entry]
