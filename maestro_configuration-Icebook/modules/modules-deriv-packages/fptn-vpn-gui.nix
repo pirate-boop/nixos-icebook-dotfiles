@@ -2,12 +2,10 @@
 
 let
   version = "0.4.3";
-  # Автоматически определяем архитектуру (amd64 или arm64)
   arch = if pkgs.stdenv.hostPlatform.isAarch64 then "arm64" else "amd64";
   
   debUrl = "https://github.com/fptn-project/fptn/releases/download/${version}/fptn-client-${version}-ubuntu22.04-${arch}.deb";
   
-  # Хеш для amd64. Если у тебя aarch64 (Apple Silicon / Raspberry Pi), замени на второй хеш
   debHash = if arch == "amd64" then 
     "sha256-35dbc9c1987c63e71ecd59b98926c4b8a9d56d1fecfdb08f60ed1fc6524709e5" 
   else 
@@ -23,15 +21,12 @@ pkgs.stdenvNoCC.mkDerivation {
     sha256 = debHash;
   };
 
-  # dpkg для распаковки .deb, autoPatchelfHook для починки библиотек NixOS
   nativeBuildInputs = with pkgs; [ dpkg autoPatchelfHook makeWrapper ];
   
-  # Базовый набор X11 и графических библиотек. 
-  # Если при запуске не хватит какой-то конкретной .so, autoPatchelfHook об этом честно скажет.
+  # ИСПРАВЛЕНО: используем новые плоские имена пакетов вместо устаревшего xorg.*
   buildInputs = with pkgs; [
-    xorg.libX11 xorg.libXext xorg.libXrender xorg.libXcomposite
-    xorg.libXdamage xorg.libXfixes xorg.libXrandr xorg.libXcursor
-    xorg.libxcb xkeyboardconfig wayland
+    libx11 libxext libxrender libxcomposite libxdamage libxfixes 
+    libxrandr libxcursor libxcb xkeyboardconfig wayland
     gtk3 qt5.qtbase qt5.qtwayland
     stdenv.cc.cc.lib
   ];
@@ -43,46 +38,57 @@ pkgs.stdenvNoCC.mkDerivation {
   installPhase = ''
     runHook preInstall
 
-    # Копируем содержимое deb пакета в $out
     cp -r usr/* $out/
-
-    # Переименуем оригинальный бинарник, чтобы он не конфликтовал с нашей оберткой
-    # (Проверь, что бинарник называется именно fptn. Если fptn-client, поправь имя здесь и ниже)
     mv $out/bin/fptn $out/bin/fptn-original 2>/dev/null || mv $out/bin/fptn-client $out/bin/fptn-original
 
-    # Создаем надежный скрипт-обертку для запуска во вложенном X-сервере (Xephyr)
-    cat > $out/bin/fptn-xephyr << EOF
+    # Создаем скрипт "Микро-рабочего стола": Xephyr + Openbox + Trayer + Приложение
+    cat > $out/bin/fptn-tray-window << EOF
 #!/bin/sh
-# Находим свободный номер дисплея, чтобы не конфликтовать с другими запущенными X-серверами
+# Находим свободный дисплей
 DISPLAY_NUM=1
-while [ -e /tmp/.X11-unix/X$DISPLAY_NUM ]; do
-  DISPLAY_NUM=$((DISPLAY_NUM + 1))
+while [ -e /tmp/.X11-unix/X\$DISPLAY_NUM ]; do
+  DISPLAY_NUM=\$((DISPLAY_NUM + 1))
 done
 
-echo "Starting nested Xephyr on display :$DISPLAY_NUM..."
-# -reset -terminate автоматически закрывает Xephyr, когда клиент отключается
-${pkgs.xorg.xephyr}/bin/Xephyr -ac -screen 1024x768 -reset -terminate :$DISPLAY_NUM &
-XEPHYR_PID=$!
+echo "Starting mini X11 environment with system tray on display :\$DISPLAY_NUM..."
 
-# Даем Xephyr секунду на инициализацию
+# 1. Запускаем вложенный X-сервер
+${pkgs.xephyr}/bin/Xephyr -ac -screen 1024x768 -reset -terminate :\$DISPLAY_NUM &
+XEPHYR_PID=\$!
 sleep 1
 
-echo "Starting FPTN Client..."
-# Запускаем само приложение внутри нового дисплея
-DISPLAY=:$DISPLAY_NUM $out/bin/fptn-original "\$@"
+# Функция для чистой уборки процессов при выходе
+cleanup() {
+  kill \$XEPHYR_PID 2>/dev/null
+}
+trap cleanup EXIT
 
-# На случай, если Xephyr не закрылся автоматически флагом -terminate
-kill $XEPHYR_PID 2>/dev/null
+# 2. Запускаем всё внутри этого дисплея
+export DISPLAY=:\$DISPLAY_NUM
+
+# Легкий оконный менеджер (почти не жрет ресурсов)
+${pkgs.openbox}/bin/openbox &
+sleep 0.5
+
+# Демон системного трея (панелька сверху справа, где появится иконка FPTN)
+${pkgs.trayer}/bin/trayer --edge top --align right --widthtype request --padding 6 --transparent true --alpha 0 --tint 0x000000 --heighttype pixel --height 24 &
+sleep 0.5
+
+echo "Starting FPTN Client inside nested environment..."
+# 3. Запускаем само приложение
+$out/bin/fptn-original "\$@"
+
+# Если приложение закрылось, скрипт завершится, и trap убьет Xephyr и trayer
 EOF
-    chmod +x $out/bin/fptn-xephyr
+    chmod +x $out/bin/fptn-tray-window
 
-    # Создаем .desktop файл для удобного запуска из меню приложений (Rofi, Wofi, GNOME, KDE и т.д.)
+    # Создаем .desktop файл для этого сценария
     mkdir -p $out/share/applications
-    cat > $out/share/applications/fptn-xephyr.desktop << EOF
+    cat > $out/share/applications/fptn-tray-window.desktop << EOF
 [Desktop Entry]
-Name=FPTN Client (Nested X11)
-Comment=FPTN VPN Client running in a safe nested Xephyr window
-Exec=fptn-xephyr
+Name=FPTN Client (with System Tray)
+Comment=FPTN VPN running in a lightweight isolated X11 window with tray support
+Exec=fptn-tray-window
 Icon=network-vpn
 Type=Application
 Categories=Network;VPN;
@@ -93,11 +99,11 @@ EOF
   '';
 
   meta = with pkgs.lib; {
-    description = "FPTN VPN Client (wrapped in nested Xephyr for maximum X11 compatibility)";
+    description = "FPTN VPN Client (wrapped in minimal X11 env with system tray support)";
     homepage = "https://github.com/fptn-project/fptn";
-    license = licenses.unfree; # Уточни лицензию, если она известна (часто проприетарная)
+    license = licenses.unfree; # Или уточни, если там что-то другое
     platforms = platforms.linux;
-    mainProgram = "fptn-xephyr";
+    mainProgram = "fptn-tray-window";
     sourceProvenance = with sourceTypes; [ binaryNativeCode ];
   };
 }
