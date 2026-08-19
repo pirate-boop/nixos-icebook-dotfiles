@@ -7,7 +7,7 @@ let
   debUrl = "https://github.com/fptn-project/fptn/releases/download/${version}/fptn-client-${version}-ubuntu22.04-${arch}.deb";
   
   debHash = if arch == "amd64" then 
-    "sha256-35dbc9c1987c63e71ecd59b98926c4b8a9d56d1fecfdb08f60ed1fc6524709e5" 
+    "sha256-1r898x9cc7zdc27v1zgc3xnxbadqqhk8kfarrlgffqvwk30wknrm" 
   else 
     "sha256-6ac07de2856f3bde6c9bd8cf0d9d7e5db9aff9c0f0a02d3cf35c4ed7dd04771b";
 
