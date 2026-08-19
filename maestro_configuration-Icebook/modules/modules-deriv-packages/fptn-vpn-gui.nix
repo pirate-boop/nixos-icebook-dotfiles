@@ -6,7 +6,6 @@ let
   
   debUrl = "https://github.com/fptn-project/fptn/releases/download/${version}/fptn-client-${version}-ubuntu22.04-${arch}.deb";
   
-  # Чистый hex-хеш для атрибута sha256 (без префиксов, как требует Nix)
   debHash = if arch == "amd64" then 
     "35dbc9c1987c63e71ecd59b98926c4b8a9d56d1fecfdb08f60ed1fc6524709e5" 
   else 
@@ -24,7 +23,7 @@ pkgs.stdenvNoCC.mkDerivation {
 
   nativeBuildInputs = with pkgs; [ dpkg autoPatchelfHook makeWrapper ];
   
-  # Отключаем стандартную Qt-обертку Nix, так как мы контролируем окружение вручную
+  # Отключаем стандартную Qt-обертку Nix
   dontWrapQtApps = true;
 
   buildInputs = with pkgs; [
@@ -34,7 +33,6 @@ pkgs.stdenvNoCC.mkDerivation {
     stdenv.cc.cc.lib
   ];
 
-  # Распаковываем deb во временную директорию сборки, а не напрямую в $out
   unpackPhase = ''
     dpkg-deb -x $src .
   '';
@@ -42,49 +40,46 @@ pkgs.stdenvNoCC.mkDerivation {
   installPhase = ''
     runHook preInstall
 
-    # Явно создаем нужные директории в $out
     mkdir -p $out/bin $out/share/applications $out/share/icons
 
-    # Корректно копируем содержимое из извлеченного usr/ в $out
     cp -r usr/bin/* $out/bin/
     cp -r usr/share/* $out/share/
 
-    # Переименовываем оригинальный бинарник
     if [ -f $out/bin/fptn ]; then
       mv $out/bin/fptn $out/bin/fptn-original
     elif [ -f $out/bin/fptn-client ]; then
       mv $out/bin/fptn-client $out/bin/fptn-original
     fi
 
-    # СОВРЕМЕННОЕ РЕШЕНИЕ: Xwayland + xembed-sni-proxy
-    # Это стандартный способ запускать X11-приложения с треем в Wayland без вложенных WM
-    cat > $out/bin/fptn-wayland << 'EOF'
+    # МАГИЯ ДЛЯ МОНОЛИТНЫХ ROOT-ПРИЛОЖЕНИЙ:
+    # Создаем обертку, которая запрашивает права root через Polkit (pkexec),
+    # но ПРИНУДИТЕЛЬНО пробрасывает переменные окружения твоей пользовательской сессии,
+    # чтобы root-процесс мог отрисовать окно в твоем Wayland/X11.
+    cat > $out/bin/fptn << 'EOF'
 #!/bin/sh
-# Запускаем мост для трансляции X11-трея в современный Wayland SNI (Status Notifier Item)
-${pkgs.xembed-sni-proxy}/bin/xembed-sni-proxy &
-PROXY_PID=$!
+# Собираем необходимые переменные окружения для отрисовки GUI от root
+ENV_VARS="DISPLAY=$DISPLAY"
+[ -n "$XAUTHORITY" ] && ENV_VARS="$ENV_VARS XAUTHORITY=$XAUTHORITY"
+[ -n "$WAYLAND_DISPLAY" ] && ENV_VARS="$ENV_VARS WAYLAND_DISPLAY=$WAYLAND_DISPLAY"
+[ -n "$XDG_RUNTIME_DIR" ] && ENV_VARS="$ENV_VARS XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR"
+[ -n "$XDG_SESSION_TYPE" ] && ENV_VARS="$ENV_VARS XDG_SESSION_TYPE=$XDG_SESSION_TYPE"
 
-# Гарантированно очищаем фоновый процесс при закрытии приложения
-cleanup() {
-  kill $PROXY_PID 2>/dev/null
-}
-trap cleanup EXIT
+# Принудительно указываем Qt использовать X11 (через Xwayland), 
+# так как это самый надежный способ для legacy-приложений с треем
+ENV_VARS="$ENV_VARS QT_QPA_PLATFORM=xcb"
+ENV_VARS="$ENV_VARS GDK_BACKEND=x11"
 
-# Принудительно указываем Qt использовать X11 (через Xwayland). 
-# Это обходит хардкод разработчика и гарантирует корректную отрисовку трей-иконки.
-export QT_QPA_PLATFORM=xcb
-
-echo "Starting FPTN Client via Xwayland with modern SNI proxy..."
-$out/bin/fptn-original "$@"
+# Запускаем оригинальный бинарник через pkexec (запрос пароля) с проброшенными переменными
+exec pkexec env $ENV_VARS $out/bin/fptn-original "$@"
 EOF
-    chmod +x $out/bin/fptn-wayland
+    chmod +x $out/bin/fptn
 
-    # Создаем .desktop файл для меню приложений
-    cat > $out/share/applications/fptn-wayland.desktop << 'EOF'
+    # .desktop файл теперь просто вызывает нашу умную обертку
+    cat > $out/share/applications/fptn.desktop << 'EOF'
 [Desktop Entry]
-Name=FPTN Client (Wayland Compatible)
-Comment=FPTN VPN with X11 tray icon bridged to native Wayland
-Exec=fptn-wayland
+Name=FPTN Client
+Comment=FPTN VPN Client (requires root, runs via Polkit)
+Exec=fptn
 Icon=network-vpn
 Type=Application
 Categories=Network;VPN;
@@ -95,11 +90,11 @@ EOF
   '';
 
   meta = with pkgs.lib; {
-    description = "FPTN VPN Client (with xembed-sni-proxy for seamless Wayland tray support)";
+    description = "FPTN VPN Client (monolithic root wrapper with Xwayland compatibility)";
     homepage = "https://github.com/fptn-project/fptn";
     license = licenses.unfree;
     platforms = platforms.linux;
-    mainProgram = "fptn-wayland";
+    mainProgram = "fptn";
     sourceProvenance = with sourceTypes; [ binaryNativeCode ];
   };
 }
