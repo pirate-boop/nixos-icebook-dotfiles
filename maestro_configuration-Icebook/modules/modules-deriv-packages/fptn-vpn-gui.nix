@@ -39,14 +39,14 @@ pkgs.stdenvNoCC.mkDerivation {
 
     cp -r usr/* $out/
     
-    # Надежно переименовываем оригинальный бинарник, чтобы он не конфликтовал с оберткой
+    # Надежно переименовываем оригинальный бинарник
     if [ -f $out/bin/fptn ]; then
       mv $out/bin/fptn $out/bin/fptn-original
     elif [ -f $out/bin/fptn-client ]; then
       mv $out/bin/fptn-client $out/bin/fptn-original
     fi
 
-    # Создаем скрипт-обертку, который запускает микро-X11 окружение с треем
+    # Создаем скрипт-обертку для изолированного X11-окна с треем
     cat > $out/bin/fptn-tray-window << 'EOF'
 #!/bin/sh
 # Находим свободный номер дисплея
@@ -57,39 +57,39 @@ done
 
 echo "Starting mini X11 environment with system tray on display :$DISPLAY_NUM..."
 
-# 1. Запускаем вложенный X-сервер
-XEPHYR_BIN="${pkgs.xorg.xephyr}/bin/Xephyr"
+# ИСПРАВЛЕНО: Xephyr теперь находится в пакете xorg.xorgserver
+XEPHYR_BIN="${pkgs.xorg.xorgserver}/bin/Xephyr"
 $XEPHYR_BIN -ac -screen 1024x768 -reset -terminate :$DISPLAY_NUM &
 XEPHYR_PID=$!
 sleep 1
 
-# Функция для чистой уборки процессов при выходе из приложения
+# Функция для чистой уборки процессов при выходе
 cleanup() {
   kill $XEPHYR_PID 2>/dev/null
 }
 trap cleanup EXIT
 
-# 2. Запускаем всё внутри этого изолированного дисплея
+# Запускаем всё внутри этого изолированного дисплея
 export DISPLAY=:$DISPLAY_NUM
 
-# Легкий оконный менеджер (почти не потребляет ресурсов)
+# Легкий оконный менеджер
 ${pkgs.openbox}/bin/openbox &
 sleep 0.5
 
-# Демон системного трея (панелька сверху справа, куда приложение положит иконку)
+# Демон системного трея (панелька сверху справа)
 TRAYER_BIN="${pkgs.trayer}/bin/trayer"
 $TRAYER_BIN --edge top --align right --widthtype request --padding 6 --transparent true --alpha 0 --tint 0x000000 --heighttype pixel --height 24 &
 sleep 0.5
 
 echo "Starting FPTN Client inside nested environment..."
-# 3. Запускаем само приложение
+# Запускаем само приложение
 $out/bin/fptn-original "$@"
 
-# Когда приложение закроется, скрипт завершится, и trap автоматически убьет Xephyr и trayer
+# Когда приложение закроется, trap автоматически убьет Xephyr и trayer
 EOF
     chmod +x $out/bin/fptn-tray-window
 
-    # Создаем .desktop файл для удобного запуска из меню приложений (Rofi, Wofi, GNOME, KDE и т.д.)
+    # Создаем .desktop файл для запуска из меню приложений
     mkdir -p $out/share/applications
     cat > $out/share/applications/fptn-tray-window.desktop << 'EOF'
 [Desktop Entry]
