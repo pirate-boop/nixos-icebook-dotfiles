@@ -10,5 +10,6 @@
     slurp                    # Select a region in a Wayland compositor
     swappy                   # Wayland native snapshot editing tool, inspired by Snappy on macOS
     qalculate-gtk            # Ultimate desktop calculator
+    whatip
   ];
 }

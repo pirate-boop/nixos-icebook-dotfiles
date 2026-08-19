@@ -20,7 +20,7 @@
     heroic             # Epic / GOG
     bottles
     #brotato
-
+    factorio-demo
     # ── Мониторинг производительности ─────────────
     mangohud
     goverlay

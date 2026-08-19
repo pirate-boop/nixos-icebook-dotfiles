@@ -23,6 +23,7 @@
     #ayugram-desktop    = { url = "github:ndfined-crp/ayugram-desktop"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
     mangowm             = { url = "github:mangowm/mango"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
     dms                 = { url = "github:AvengeMedia/DankMaterialShell/stable"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
+    nix-software-center.url = "git+https://git.oss.uzinfocom.uz/xinux/software-center"; };
   };
 
   outputs = inputs@{ flake-parts, ... }:
