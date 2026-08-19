@@ -6,8 +6,9 @@ let
   
   debUrl = "https://github.com/fptn-project/fptn/releases/download/${version}/fptn-client-${version}-ubuntu22.04-${arch}.deb";
   
+  # ИСПРАВЛЕНО: используем дефис вместо двоеточия в SRI хеше
   debHash = if arch == "amd64" then 
-    "sha256:35dbc9c1987c63e71ecd59b98926c4b8a9d56d1fecfdb08f60ed1fc6524709e5" 
+    "sha256-35dbc9c1987c63e71ecd59b98926c4b8a9d56d1fecfdb08f60ed1fc6524709e5" 
   else 
     "sha256-6ac07de2856f3bde6c9bd8cf0d9d7e5db9aff9c0f0a02d3cf35c4ed7dd04771b";
 
@@ -18,11 +19,14 @@ pkgs.stdenvNoCC.mkDerivation {
 
   src = pkgs.fetchurl {
     url = debUrl;
-    sha256 = debHash;
+    hash = debHash; # Используем hash вместо sha256 для современной совместимости
   };
 
   nativeBuildInputs = with pkgs; [ dpkg autoPatchelfHook makeWrapper ];
   
+  # ИСПРАВЛЕНО: отключаем автоматическую обертку Qt, так как мы делаем свою изолированную обертку
+  dontWrapQtApps = true;
+
   buildInputs = with pkgs; [
     libx11 libxext libxrender libxcomposite libxdamage libxfixes 
     libxrandr libxcursor libxcb xkeyboardconfig wayland
@@ -57,8 +61,8 @@ done
 
 echo "Starting mini X11 environment with system tray on display :$DISPLAY_NUM..."
 
-# ИСПРАВЛЕНО: Xephyr теперь находится в пакете xorg.xorgserver
-XEPHYR_BIN="${pkgs.xorg.xorgserver}/bin/Xephyr"
+# ИСПРАВЛЕНО: xorg-server вместо устаревшего xorg.xorgserver
+XEPHYR_BIN="${pkgs.xorg-server}/bin/Xephyr"
 $XEPHYR_BIN -ac -screen 1024x768 -reset -terminate :$DISPLAY_NUM &
 XEPHYR_PID=$!
 sleep 1
