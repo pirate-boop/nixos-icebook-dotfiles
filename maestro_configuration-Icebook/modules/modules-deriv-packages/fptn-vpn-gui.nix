@@ -21,9 +21,9 @@ pkgs.stdenvNoCC.mkDerivation {
     sha256 = debHash;
   };
 
-  nativeBuildInputs = with pkgs; [ dpkg autoPatchelfHook makeWrapper ];
+  # Добавляем libcap для использования команды setcap
+  nativeBuildInputs = with pkgs; [ dpkg autoPatchelfHook makeWrapper libcap ];
   
-  # Отключаем стандартную Qt-обертку Nix
   dontWrapQtApps = true;
 
   buildInputs = with pkgs; [
@@ -51,34 +51,25 @@ pkgs.stdenvNoCC.mkDerivation {
       mv $out/bin/fptn-client $out/bin/fptn-original
     fi
 
-    # МАГИЯ ДЛЯ МОНОЛИТНЫХ ROOT-ПРИЛОЖЕНИЙ:
-    # Создаем обертку, которая запрашивает права root через Polkit (pkexec),
-    # но ПРИНУДИТЕЛЬНО пробрасывает переменные окружения твоей пользовательской сессии,
-    # чтобы root-процесс мог отрисовать окно в твоем Wayland/X11.
+    # ГЛАВНОЕ РЕШЕНИЕ: Выдаем бинарнику точечные права на управление сетью.
+    # CAP_NET_ADMIN позволяет создавать TUN/TAP интерфейсы без полных прав root.
+    # CAP_NET_RAW позволяет работать с сырыми сетевыми пакетами.
+    # Это позволяет GUI запускаться от обычного пользователя, идеально работая в Wayland и трее.
+    setcap cap_net_admin,cap_net_raw+ep $out/bin/fptn-original
+
+    # Создаем простую обертку, которая гарантирует использование Xwayland для совместимости трея
     cat > $out/bin/fptn << 'EOF'
 #!/bin/sh
-# Собираем необходимые переменные окружения для отрисовки GUI от root
-ENV_VARS="DISPLAY=$DISPLAY"
-[ -n "$XAUTHORITY" ] && ENV_VARS="$ENV_VARS XAUTHORITY=$XAUTHORITY"
-[ -n "$WAYLAND_DISPLAY" ] && ENV_VARS="$ENV_VARS WAYLAND_DISPLAY=$WAYLAND_DISPLAY"
-[ -n "$XDG_RUNTIME_DIR" ] && ENV_VARS="$ENV_VARS XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR"
-[ -n "$XDG_SESSION_TYPE" ] && ENV_VARS="$ENV_VARS XDG_SESSION_TYPE=$XDG_SESSION_TYPE"
-
-# Принудительно указываем Qt использовать X11 (через Xwayland), 
-# так как это самый надежный способ для legacy-приложений с треем
-ENV_VARS="$ENV_VARS QT_QPA_PLATFORM=xcb"
-ENV_VARS="$ENV_VARS GDK_BACKEND=x11"
-
-# Запускаем оригинальный бинарник через pkexec (запрос пароля) с проброшенными переменными
-exec pkexec env $ENV_VARS $out/bin/fptn-original "$@"
+export QT_QPA_PLATFORM=xcb
+export GDK_BACKEND=x11
+exec $out/bin/fptn-original "$@"
 EOF
     chmod +x $out/bin/fptn
 
-    # .desktop файл теперь просто вызывает нашу умную обертку
     cat > $out/share/applications/fptn.desktop << 'EOF'
 [Desktop Entry]
 Name=FPTN Client
-Comment=FPTN VPN Client (requires root, runs via Polkit)
+Comment=FPTN VPN Client (runs as user with network capabilities)
 Exec=fptn
 Icon=network-vpn
 Type=Application
@@ -90,7 +81,7 @@ EOF
   '';
 
   meta = with pkgs.lib; {
-    description = "FPTN VPN Client (monolithic root wrapper with Xwayland compatibility)";
+    description = "FPTN VPN Client (uses Linux capabilities instead of full root)";
     homepage = "https://github.com/fptn-project/fptn";
     license = licenses.unfree;
     platforms = platforms.linux;
