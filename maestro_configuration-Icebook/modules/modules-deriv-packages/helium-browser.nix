@@ -26,8 +26,16 @@ pkgs.stdenvNoCC.mkDerivation {
   nativeBuildInputs = with pkgs; [ autoPatchelfHook makeWrapper ];
   
   buildInputs = with pkgs; [
-    libx11 libxcomposite libxdamage libxext libxfixes libxrandr
-    libxcb libxrender libxkbcommon wayland
+    ,libx11
+    ,libxcomposite
+    ,libxdamage
+    ,libxext
+    ,libxfixes
+    ,libxrandr
+    ,libxcb
+    ,libxrender
+    ,libxkbcommon
+    ,wayland
     gtk3 nss nspr alsa-lib cups dbus expat libdrm libgbm.so.1
     stdenv.cc.cc.lib
   ];
