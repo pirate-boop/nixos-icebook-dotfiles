@@ -39,19 +39,23 @@ pkgs.stdenvNoCC.mkDerivation {
 
     mkdir -p $out/bin $out/share/applications $out/share/icons
 
-    # Надежно копируем все бинарники из deb-пакета
-    for bin in usr/bin/*; do
-      install -Dm755 "$bin" "$out/bin/$(basename "$bin")"
-    done
-
-    # Создаем алиас helium-browser через makeWrapper (безопасно для Nix)
-    if [ -f "$out/bin/helium" ]; then
-      makeWrapper $out/bin/helium $out/bin/helium-browser
+    # 1. Безусловно копируем всё из usr/bin, не предполагая конкретных имен файлов
+    if [ -d usr/bin ]; then
+      cp -r usr/bin/. $out/bin/
     fi
 
-    # Копируем иконки и desktop-файлы
-    cp -r usr/share/applications/. $out/share/applications/ 2>/dev/null || true
-    cp -r usr/share/icons/. $out/share/icons/ 2>/dev/null || true
+    # 2. Находим любой исполняемый файл в $out/bin и создаем для него алиас helium-browser
+    MAIN_BIN=$(find $out/bin -maxdepth 1 -type f -executable | head -n 1)
+    if [ -n "$MAIN_BIN" ]; then
+      makeWrapper "$MAIN_BIN" "$out/bin/helium-browser"
+    else
+      echo "ERROR: No executable found in usr/bin"
+      exit 1
+    fi
+
+    # 3. Копируем метаданные (иконки и desktop-файлы), если они есть
+    [ -d usr/share/applications ] && cp -r usr/share/applications/. $out/share/applications/
+    [ -d usr/share/icons ] && cp -r usr/share/icons/. $out/share/icons/
 
     runHook postInstall
   '';
@@ -61,7 +65,7 @@ pkgs.stdenvNoCC.mkDerivation {
     homepage = "https://helium.computer/";
     license = licenses.unfree;
     platforms = platforms.linux;
-    mainProgram = "helium";
+    mainProgram = "helium-browser";
     sourceProvenance = with sourceTypes; [ binaryNativeCode ];
   };
 }
