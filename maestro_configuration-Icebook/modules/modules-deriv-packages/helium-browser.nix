@@ -2,14 +2,16 @@
 
 let
   version = "0.15.5.1";
-  arch = if pkgs.stdenv.hostPlatform.isAarch64 then "arm64" else "amd64";
+  arch = if pkgs.stdenv.hostPlatform.isAarch64 then "arm64" else "x86_64";
   
-  debUrl = "https://github.com/imputnet/helium-linux/releases/download/${version}/helium-bin_${version}-1_${arch}.deb";
+  # Используем чистый tar.xz вместо deb-пакета
+  tarballUrl = "https://github.com/imputnet/helium-linux/releases/download/${version}/helium-${version}-${arch}_linux.tar.xz";
   
-  debHash = if arch == "amd64" then 
-    "8c5e6a3d878289baee16aa87fb49619fa9f675fe4adf5c556da53bc61f418e83" 
+  # Официальные sha256 хеши для tar.xz
+  tarballHash = if arch == "x86_64" then 
+    "f34a1ee1a6ab2e3109d92e3939512a37cfe68a2f0d230b525cc1589fc192fd97" 
   else 
-    "68b2cee1d2b1674920aed7c35243b67d04e3e8f552f61596e5603bd2469bfb7a";
+    "d9323d0771a374de5e5a666a7e754e21f298c238eac21df8e5868ac7b5f64cfe";
 
 in
 pkgs.stdenvNoCC.mkDerivation {
@@ -17,11 +19,11 @@ pkgs.stdenvNoCC.mkDerivation {
   inherit version;
 
   src = pkgs.fetchurl {
-    url = debUrl;
-    sha256 = debHash;
+    url = tarballUrl;
+    sha256 = tarballHash;
   };
 
-  nativeBuildInputs = with pkgs; [ dpkg autoPatchelfHook makeWrapper ];
+  nativeBuildInputs = with pkgs; [ autoPatchelfHook makeWrapper ];
   
   buildInputs = with pkgs; [
     libx11 libxcomposite libxdamage libxext libxfixes libxrandr
@@ -30,32 +32,39 @@ pkgs.stdenvNoCC.mkDerivation {
     stdenv.cc.cc.lib
   ];
 
-  unpackPhase = ''
-    dpkg-deb -x $src .
-  '';
+  # Распаковываем в текущую директорию
+  sourceRoot = ".";
 
   installPhase = ''
     runHook preInstall
 
     mkdir -p $out/bin $out/share/applications $out/share/icons
 
-    # 1. Безусловно копируем всё из usr/bin, не предполагая конкретных имен файлов
-    if [ -d usr/bin ]; then
-      cp -r usr/bin/. $out/bin/
+    # Находим распакованную папку (она называется примерно helium-0.15.5.1)
+    HELIUM_DIR=$(find . -maxdepth 1 -type d -name "helium-*" | head -n 1)
+    if [ -z "$HELIUM_DIR" ]; then
+      HELIUM_DIR="."
     fi
 
-    # 2. Находим любой исполняемый файл в $out/bin и создаем для него алиас helium-browser
-    MAIN_BIN=$(find $out/bin -maxdepth 1 -type f -executable | head -n 1)
-    if [ -n "$MAIN_BIN" ]; then
-      makeWrapper "$MAIN_BIN" "$out/bin/helium-browser"
+    # Находим главный исполняемый файл и создаем удобный алиас
+    if [ -f "$HELIUM_DIR/helium" ]; then
+      install -Dm755 "$HELIUM_DIR/helium" "$out/bin/helium"
+      makeWrapper "$out/bin/helium" "$out/bin/helium-browser"
+    elif [ -f "$HELIUM_DIR/helium-browser" ]; then
+      install -Dm755 "$HELIUM_DIR/helium-browser" "$out/bin/helium-browser"
     else
-      echo "ERROR: No executable found in usr/bin"
-      exit 1
+      MAIN_BIN=$(find "$HELIUM_DIR" -maxdepth 1 -type f -executable | head -n 1)
+      if [ -n "$MAIN_BIN" ]; then
+        install -Dm755 "$MAIN_BIN" "$out/bin/helium-browser"
+      else
+        echo "ERROR: No executable found in tarball"
+        exit 1
+      fi
     fi
 
-    # 3. Копируем метаданные (иконки и desktop-файлы), если они есть
-    [ -d usr/share/applications ] && cp -r usr/share/applications/. $out/share/applications/
-    [ -d usr/share/icons ] && cp -r usr/share/icons/. $out/share/icons/
+    # Копируем метаданные (иконки и desktop-файлы), если они есть в архиве
+    [ -d "$HELIUM_DIR/share/applications" ] && cp -r "$HELIUM_DIR/share/applications/." "$out/share/applications/"
+    [ -d "$HELIUM_DIR/share/icons" ] && cp -r "$HELIUM_DIR/share/icons/." "$out/share/icons/"
 
     runHook postInstall
   '';
