@@ -6,7 +6,6 @@ let
   
   debUrl = "https://github.com/imputnet/helium-linux/releases/download/${version}/helium-bin_${version}-1_${arch}.deb";
   
-  # Чистые hex-хеши для .deb пакетов
   debHash = if arch == "amd64" then 
     "8c5e6a3d878289baee16aa87fb49619fa9f675fe4adf5c556da53bc61f418e83" 
   else 
@@ -24,7 +23,6 @@ pkgs.stdenvNoCC.mkDerivation {
 
   nativeBuildInputs = with pkgs; [ dpkg autoPatchelfHook makeWrapper ];
   
-  # Базовые зависимости для Chromium-подобных браузеров в NixOS
   buildInputs = with pkgs; [
     libx11 libxcomposite libxdamage libxext libxfixes libxrandr
     libxcb libxrender libxkbcommon wayland
@@ -41,12 +39,19 @@ pkgs.stdenvNoCC.mkDerivation {
 
     mkdir -p $out/bin $out/share/applications $out/share/icons
 
-    # Распаковываем содержимое deb-пакета
-    cp -r usr/bin/* $out/bin/
-    cp -r usr/share/* $out/share/
+    # Надежно копируем все бинарники из deb-пакета
+    for bin in usr/bin/*; do
+      install -Dm755 "$bin" "$out/bin/$(basename "$bin")"
+    done
 
-    # Создаем удобный симлинк, чтобы запускать просто по имени helium-browser
-    ln -s $out/bin/helium $out/bin/helium-browser
+    # Создаем алиас helium-browser через makeWrapper (безопасно для Nix)
+    if [ -f "$out/bin/helium" ]; then
+      makeWrapper $out/bin/helium $out/bin/helium-browser
+    fi
+
+    # Копируем иконки и desktop-файлы
+    cp -r usr/share/applications/. $out/share/applications/ 2>/dev/null || true
+    cp -r usr/share/icons/. $out/share/icons/ 2>/dev/null || true
 
     runHook postInstall
   '';
