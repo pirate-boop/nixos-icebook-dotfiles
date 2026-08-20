@@ -4,6 +4,6 @@
     ./disko.nix
     ./chaotic.nix
     ./home-manager.nix
-    #./vivaldi-snapshot.nix
+    ./vivaldi-snapshot.nix
   ];
 }

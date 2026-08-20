@@ -1,3 +1,5 @@
 { inputs, ... }: {
-  imports = [ inputs.vivaldi.overlays.default ];
+  nixpkgs.overlays = [
+    inputs.vivaldi.overlays.default
+  ];
 }
