@@ -1,7 +1,7 @@
 { ... }: {
   imports = [
     ./nix-ctrl.nix
-    ./nix.nix
+    ./nconf.nix
     ./nix-ttt.nix
     ./kori-rebuild-switch.nix
     ./kori-rebuild-switch-log.nix

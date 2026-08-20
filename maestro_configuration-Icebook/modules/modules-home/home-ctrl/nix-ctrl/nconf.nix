@@ -1,7 +1,7 @@
 { pkgs, ... }: {
   home.packages = [
     (pkgs.writeShellApplication {
-      name = "nix";
+      name = "nconf";
       runtimeInputs = [ pkgs.coreutils ];
       text = ''
         cd /etc/nixos && exec "$SHELL"
