@@ -766,6 +766,7 @@
         "nur": "nur",
         "scrcpy-gui": "scrcpy-gui",
         "ttt": "ttt",
+        "vivaldi": "vivaldi",
         "waydroid-script": "waydroid-script",
         "zen-browser": "zen-browser"
       }
@@ -995,6 +996,26 @@
       "original": {
         "owner": "eugenioenko",
         "repo": "ttt",
+        "type": "github"
+      }
+    },
+    "vivaldi": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs-unstable"
+        ]
+      },
+      "locked": {
+        "lastModified": 1787159884,
+        "narHash": "sha256-5KB521fv5Ta94HWg2H6kb3naqWk3eVv1XozRWTWVODg=",
+        "owner": "Hy4ri",
+        "repo": "vivaldi-snapshot-flake",
+        "rev": "ecce71742884010e56062808a6a43d7c00fff818",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Hy4ri",
+        "repo": "vivaldi-snapshot-flake",
         "type": "github"
       }
     },
