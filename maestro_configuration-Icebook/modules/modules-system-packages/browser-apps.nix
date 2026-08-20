@@ -6,7 +6,6 @@
     # google-chrome              # основной (allowUnfree = true)
     floorp-bin
     #orion-browser
-    helium-browser
     # ── Резерв ────────────────────────────────────
     # firefox                    # когда Chrome тупит
     # chromium                   # тест / без Google services
