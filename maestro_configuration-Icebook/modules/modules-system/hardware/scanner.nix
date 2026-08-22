@@ -20,7 +20,9 @@
     pkgs.epsonscan2
     pkgs.sane-backends
   ];
-
+  services.udev.extraRules = ''
+  ATTRS{idVendor}=="04b8", ATTRS{idProduct}=="013e", MODE="0666", GROUP="scanner"
+'';
   # User permissions for hardware scanning
   #users.users.Kori.extraGroups = [ "scanner" "lp" ];
 }
