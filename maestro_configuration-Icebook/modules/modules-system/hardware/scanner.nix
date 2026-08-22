@@ -22,5 +22,5 @@
   ];
 
   # Grant scanner and printer access to the main user
-  users.users.Kori.extraGroups = [ "scanner" "lp" ];
+  #users.users.Kori.extraGroups = [ "scanner" "lp" ];
 }
