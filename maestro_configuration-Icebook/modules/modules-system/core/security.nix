@@ -21,26 +21,24 @@
     "net.ipv4.tcp_syncookies" = 1;
     "net.ipv4.tcp_rfc1337" = 1;
 
-    ## TCP Optimization (Ускорение интернета)
+    ## TCP Optimization (Internet Speedup)
     "net.ipv4.tcp_fastopen" = 3;
     "net.ipv4.tcp_congestion_control" = "bbr";
     "net.core.default_qdisc" = "cake";
   };
 
-  # Загружаем модуль для ускорения TCP
+  # Loading a module to accelerate TCP
   boot.kernelModules = [ "tcp_bbr" ];
 
   security = {
-    # Чтобы блокировщики экрана (hyprlock, niri-lock) могли тебя пустить обратно
     pam.services.hyprlock.text = "auth include login";
-    pam.services.niri-lock.text = "auth include login"; # Добавил для Niri
+    pam.services.niri-lock.text = "auth include login";
 
 
-    # Нужен для плавной работы звука (Pipewire) без заиканий
+    # Needed for smooth audio operation (Pipewire) without stuttering
     rtkit.enable = true;
 
-    # Отключаем запрос пароля для sudo (группа wheel)
-    # Удобно, но будь осторожен — любая прога сможет выполнить sudo без спроса
+    # Disable password prompt for sudo (wheel group)
     sudo.wheelNeedsPassword = false;
   };
 

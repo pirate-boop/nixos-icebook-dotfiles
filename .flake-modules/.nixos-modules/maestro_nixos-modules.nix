@@ -5,5 +5,6 @@
     ./chaotic.nix
     ./home-manager.nix
     ./vivaldi-snapshot.nix
+    ./flclashx.nix
   ];
 }

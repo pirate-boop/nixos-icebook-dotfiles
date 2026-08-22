@@ -5,7 +5,7 @@
   
   nixpkgs.hostPlatform = "x86_64-linux";
   
-  # Минимальная ISO с bcachefs
+  # Minimal ISO with bcachefs
   isoImage.isoBaseName = "nixos-bcachefs";
   isoImage.edition = "bcachefs";
 }

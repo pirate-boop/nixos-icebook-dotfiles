@@ -25,6 +25,7 @@
     dms                 = { url = "github:AvengeMedia/DankMaterialShell/stable"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
     nix-software-center = { url = "git+https://git.oss.uzinfocom.uz/xinux/software-center"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
     vivaldi             = { url = "github:Hy4ri/vivaldi-snapshot-flake"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
+    flclashx            = { url = "github:pirate-boop/flclashx-flake"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
   };
 
   outputs = inputs@{ flake-parts, ... }:

@@ -1,5 +1,3 @@
-{ config, pkgs, ... }:
-
-{
+{ config, pkgs, ... }: {
   programs.cfs-zen-tweaks.enable = true;
 }

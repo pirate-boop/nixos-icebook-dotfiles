@@ -27,9 +27,9 @@
     ];
   };
 
-  # /etc/nixos всегда принадлежит юзеру: на каждом boot и каждом
-  # nixos-rebuild switch права принудительно возвращаются,
-  # даже если какой-то sudo-скрипт сделал папку root-овской
+  # /etc/nixos is always owned by Kori: on every boot and every
+  # ​​nixos-rebuild switch, the permissions are forcibly restored,
+  # even if some sudo script made the folder root-owned
   system.activationScripts.etcNixosOwnership = {
     deps = [ "etc" "users" ];
     text = ''
@@ -37,8 +37,7 @@
     '';
   };
 
-  # data-диск всегда принадлежит юзеру: переживает ребилды и
-  # автоматически чинится после переформатирования
+  # A data drive always belongs to the user: it survives rebuilds and is automatically repaired after reformatting.
   system.activationScripts.dataOwnership = {
     deps = [ "etc" "users" ];
     text = ''

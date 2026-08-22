@@ -1,25 +1,25 @@
 { pkgs, ... }: {
   environment.systemPackages = with pkgs; [
-    # ── Управление VM ─────────────────────────────
+    # ── VM Management ──────────────────────────────
     virt-manager
-    virt-viewer       # SPICE/VNC клиент для VM
-    virtio-win        # VirtIO драйверы для Windows VM
+    virt-viewer       # SPICE/VNC client for VM
+    virtio-win        # VirtIO drivers for Windows VMs
 
-    # ── QEMU утилиты ──────────────────────────────
+    # ── QEMU utilities ───────────────────────────────
     qemu_kvm
-    swtpm             # эмуляция TPM (нужен для Win11)
-    OVMFFull          # UEFI прошивка
+    swtpm             # TPM emulation (required for Win11)
+    OVMFFull          # UEFI firmware
 
     # ── Looking Glass (single-GPU passthrough) ────
-    # Позволяет видеть экран Windows VM на хосте
-    # через общую память без второго монитора
+    # Allows you to see the Windows VM screen on the host
+    # via shared memory without a second monitor
     looking-glass-client
 
-    # ── Waydroid утилиты ──────────────────────────
+    # ── Waydroid utilities ──────────────────────────
     waydroid
-    wl-clipboard      # уже в system-tools, дубль не страшен
+    wl-clipboard
 
-    # ── Docker (опционально, для работы) ──────────
+    # ── Docker (optional, for work) ──────────
     docker
     docker-compose
   ];
