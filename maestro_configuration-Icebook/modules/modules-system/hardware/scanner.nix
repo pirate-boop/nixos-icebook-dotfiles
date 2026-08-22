@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   # Enable SANE scanning support with Epson v2 backend and non-free plugin
