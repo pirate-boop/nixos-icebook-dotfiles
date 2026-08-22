@@ -9,5 +9,6 @@
     ./amd.nix    # amdgpu, opencl, power
     ./audio.nix  # PipeWire
     ./input.nix  # libinput, udev, геймпад
+    ./scanner.nix
   ];
 }

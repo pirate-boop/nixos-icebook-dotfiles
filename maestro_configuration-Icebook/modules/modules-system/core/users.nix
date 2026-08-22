@@ -24,6 +24,8 @@
       "kvm"
       "plugdev"
       "gnunet"
+      "scanner"
+      "lp"
     ];
   };
 
