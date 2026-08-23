@@ -19,5 +19,6 @@
     # thunderbird
     # protonmail-bridge  # если нужен Proton
     deltachat-repl
+    deltachat-tauri
   ];
 }
