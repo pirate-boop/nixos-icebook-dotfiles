@@ -11,5 +11,6 @@
     # ── Резерв ────────────────────────────────────
     # firefox                    # когда Chrome тупит
     # chromium                   # тест / без Google services
+    brave
   ];
 }
