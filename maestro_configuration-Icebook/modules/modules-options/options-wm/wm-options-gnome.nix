@@ -27,6 +27,7 @@
     dconf-editor
     
     # Extensions for tiling & canvas hybrid workflow
+    gnomeExtensions.arcmenu
     gnomeExtensions.paperwm
     gnomeExtensions.tiling-assistant
     gnomeExtensions.blur-my-shell
