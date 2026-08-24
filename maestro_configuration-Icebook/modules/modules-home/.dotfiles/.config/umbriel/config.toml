@@ -50,9 +50,14 @@ saturation = 2.0
 [appearance.shadow]
 enabled = true
 softness = 39
-offset_x = 0
+offset_x = 5
 offset_y = 5
 color = "#c061cb7F"
+
+[overview]
+zoom = 0.5
+background_tint = "#10101430"
+workspace_background = "#00000044"
 
 [layout]
 mode = "scrolling"
