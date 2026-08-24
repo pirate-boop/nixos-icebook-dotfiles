@@ -98,24 +98,24 @@ follows_mouse = true
 follows_mouse_max_scroll = 0.0
 
 [keybinds]
-# Applications
+# ---Applications---
 "Mod+T" = "spawn:wezterm"
 "Mod+D" = "spawn:vesktop"
 "Mod+E" = "spawn:thunar"
 "Mod+Z" = "spawn:AyuGram"
-"Mod+W" = "spawn:vivaldi"
+"Mod+W" = "spawn:zen"
 "Mod+K" = "spawn:kate"
 "Mod+M" = "spawn:pear-desktop"
 "F10" = "spawn:qalculate-gtk"
 "F11" = "spawn:thunderbird"
 
-# Noctalia shell controls
+# ---Noctalia shell controls---
 "Mod+S" = "spawn:noctalia msg panel-toggle launcher"
 "Mod+C" = "spawn:noctalia msg panel-toggle control-center"
 "F12" = "spawn:noctalia msg panel-toggle session"
 "Super+Alt+L" = "spawn:lock-session-kori"
 
-# Window actions
+# ---Window actions---
 "Mod+Escape" = "window-close"
 "Mod+X" = "overview-toggle"
 "Mod+F" = "window-cycle-width"
@@ -125,29 +125,39 @@ follows_mouse_max_scroll = 0.0
 "Mod+Caps_Lock" = "window-toggle-floating"
 "Mod+Space" = "keyboard-layout-next"
 
-# Navigation
+# ---Windows Navigation---
 "Mod+Left" = "focus-left"
 "Mod+Right" = "focus-right"
-"Mod+H" = "focus-left"
-"Mod+L" = "focus-right"
-"Mod+J" = "focus-down"
-#"Mod+K" = "focus-up"
+"Mod+Up" = "window-focus-up"
+"Mod+Down" = "window-focus-down"
 
-"Mod+Shift+Left" = "window-move-left"
-"Mod+Shift+Right" = "window-move-right"
-"Mod+Shift+H" = "window-move-left"
-"Mod+Shift+L" = "window-move-right"
+#"Mod+H" = "window-focus-left"
+#"Mod+L" = "window-focus-right"
+#"Mod+J" = "window-focus-down"
+#"Mod+K" = "window-focus-up"
 
-# Workspaces
-"Mod+1" = "workspace-1"
-"Mod+2" = "workspace-2"
-"Mod+3" = "workspace-3"
-"Mod+4" = "workspace-4"
-"Mod+5" = "workspace-5"
-"Mod+6" = "workspace-6"
-"Mod+7" = "workspace-7"
-"Mod+8" = "workspace-8"
-"Mod+9" = "workspace-9"
+
+
+"Mod+Shift+Left" = "column-move-left"
+"Mod+Shift+Right" = "column-move-right"
+"Mod+Shift+Up" = "window-move-up"
+"Mod+Shift+Down" = "window-move-down"
+
+#"Mod+Shift+H" = "column-move-left"
+#"Mod+Shift+L" = "column-move-right"
+#"Mod+Shift+K" = "window-move-up"
+#"Mod+Shift+J" = "window-move-down"
+
+# ---Workspaces---
+#"Mod+1" = "workspace-1"
+#"Mod+2" = "workspace-2"
+#"Mod+3" = "workspace-3"
+#"Mod+4" = "workspace-4"
+#"Mod+5" = "workspace-5"
+#"Mod+6" = "workspace-6"
+#"Mod+7" = "workspace-7"
+#"Mod+8" = "workspace-8"
+#"Mod+9" = "workspace-9"
 
 "Mod+Shift+1" = "window-move-to-workspace-1"
 "Mod+Shift+2" = "window-move-to-workspace-2"
@@ -159,7 +169,7 @@ follows_mouse_max_scroll = 0.0
 "Mod+Shift+8" = "window-move-to-workspace-8"
 "Mod+Shift+9" = "window-move-to-workspace-9"
 
-# Media keys
+# ---Media keys---
 "XF86AudioRaiseVolume" = "spawn:wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ -l 1.0"
 "XF86AudioLowerVolume" = "spawn:wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"
 "XF86AudioMute" = "spawn:wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
@@ -170,7 +180,11 @@ follows_mouse_max_scroll = 0.0
 "XF86MonBrightnessUp" = "spawn:brightnessctl --class=backlight set +10%"
 "XF86MonBrightnessDown" = "spawn:brightnessctl --class=backlight set 10%-"
 
-# Window rules for Noctalia
+# ---Screenshots toggles---
+"Print" = "spawn:noctalia msg screenshot-region" # Screenshot selected region
+"Shift+Print" = "spawn:noctalia msg screenshot-fullscreen" # Screenshot full screen
+
+# ---Window rules for Noctalia---
 [[window_rule]]
 match.app_id = "^dev.noctalia.Noctalia$"
 default_floating = true
@@ -181,7 +195,7 @@ match.app_id = "^dev.noctalia.UmbrielSharePicker$"
 default_floating = true
 default_size = [800, 600]
 
-# Layer rules for Noctalia shell
+# ---Layer rules for Noctalia shell---
 [[layer_rule]]
 match.namespace = "^noctalia-(bar-[^\"]+|notification|dock|panel|attached-panel|osd)$"
 blur = true
