@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ pkgs, ... }:
 
 {
   # Display manager and GNOME desktop module
@@ -6,20 +6,19 @@
   services.xserver.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
 
-  # Optional key management GUI (keyring service itself is auto-enabled)
+  # Optional key management GUI
   programs.seahorse.enable = true;
 
-  # Remove unwanted GNOME default packages
-  environment.gnome.excludePackages = (with pkgs; [
+  # Remove unwanted GNOME default packages (all apps are top-level pkgs)
+  environment.gnome.excludePackages = with pkgs; [
     gnome-tour
     gnome-user-docs
-  ]) ++ (with pkgs.gnome; [
     cheese
     gnome-music
     epiphany
     geary
     totem
-  ]);
+  ];
 
   # Essential tweak tools and extensions
   environment.systemPackages = with pkgs; [
