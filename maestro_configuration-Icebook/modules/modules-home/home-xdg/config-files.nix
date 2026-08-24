@@ -5,6 +5,10 @@
   xdg.configFile."mango/config.conf".source = ../.dotfiles/.config/mango/config.conf; xdg.configFile."mango/config.conf".force = true;
   #--HYPRLOCK--
   xdg.configFile."hypr/hyprlock.conf".source = ../.dotfiles/.config/hypr/hyprlock.conf;
+  #--UMBRIEL--
+  xdg.configFile."umbriel/config.toml".source = ../.dotfiles/.config/umbriel/config.toml; xdg.configFile."umbriel/config.toml".force = true;
+
+  
 
   #--YAZI--
   xdg.configFile."yazi/yazi.toml".source = ../.dotfiles/.config/yazi/yazi.toml;
