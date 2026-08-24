@@ -62,6 +62,13 @@ natural_scroll = true
 accel_profile = "flat"
 sensitivity = 0.0
 
+[input.cursor]
+theme = "FernBLZ"
+size = 24                      
+hardware_cursor = true
+hide_when_typing = false
+hide_timeout_ms = 0
+
 [input.focus]
 follows_mouse = true
 follows_mouse_max_scroll = 0.0
