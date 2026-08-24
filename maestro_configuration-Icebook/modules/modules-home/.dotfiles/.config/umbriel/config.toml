@@ -14,13 +14,28 @@ focus_on_activate = false
 [workspaces]
 back_and_forth = true
 
+[colors]
+background = "#141419F0"
+text_primary = "#E8E8EAFF"
+text_muted = "#8A8A92FF"
+accent_primary = "#7AA3FFFF"
+accent_secondary = "#F5C96BFF"
+warning = "#F5C96BFF"
+error = "#FF6B6BFF"
+
 [appearance]
 prefer_no_csd = true
-border_width = 3
-corner_radius = 6
-animation_ms = 200
-border_focused = "#f38ba8"
-border_unfocused = "#585b70"
+border_width = 2               
+outer_border_width = 0         
+corner_radius = 10             
+border_focused = "#7AA3FFFF"
+border_unfocused = "#292933FF"
+scratchpad_border_focused = "#E5C07BFF"
+scratchpad_border_unfocused = "#5C4A2AFF"
+outer_border_color = "#1A1A1FFF"
+insert_hint_color = "#7FC8FF80"
+backdrop_color = "#000000FF"
+animation_ms = 200             
 
 [appearance.blur]
 enabled = true
