@@ -107,7 +107,7 @@ follows_mouse_max_scroll = 0.0
 "Mod+H" = "focus-left"
 "Mod+L" = "focus-right"
 "Mod+J" = "focus-down"
-"Mod+K" = "focus-up"
+#"Mod+K" = "focus-up"
 
 "Mod+Shift+Left" = "window-move-left"
 "Mod+Shift+Right" = "window-move-right"
