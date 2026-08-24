@@ -28,6 +28,8 @@
     flclashx            = { url = "github:pirate-boop/flclashx-flake"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
     driftwm             = { url = "github:malbiruk/driftwm"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
     halley              = { url = "github:binarylinuxx/halley-flake"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
+    umbriel             = { url = "git+https://github.com/noctalia-dev/umbriel"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
+    xdg-desktop-portal-umbriel = { url = "github:noctalia-dev/xdg-desktop-portal-umbriel"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
   };
 
   outputs = inputs@{ flake-parts, ... }:

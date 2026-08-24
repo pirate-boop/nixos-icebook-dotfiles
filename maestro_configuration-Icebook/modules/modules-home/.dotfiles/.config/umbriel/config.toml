@@ -1,0 +1,158 @@
+[include]
+files = []
+
+[general]
+autostart = [
+  "noctalia",
+  "swayidle -w before-sleep 'noctalia msg session lock'"
+]
+mod_key = "Super"
+xwayland = true
+show_cheatsheet = false
+focus_on_activate = false
+
+[workspaces]
+back_and_forth = true
+
+[appearance]
+prefer_no_csd = true
+border_width = 3
+corner_radius = 6
+animation_ms = 200
+border_focused = "#f38ba8"
+border_unfocused = "#585b70"
+
+[appearance.blur]
+enabled = true
+optimized = true
+passes = 3
+radius = 5
+saturation = 2.0
+
+[appearance.shadow]
+enabled = true
+softness = 39
+offset_x = 0
+offset_y = 5
+color = "#c061cb7F"
+
+[layout]
+mode = "scrolling"
+gap = 2
+width_presets = [0.5, 1.0]
+
+[layout.scrolling]
+default_width_fraction = 1.0
+center_underfull_strip = true
+
+[input]
+middle_click_paste = true
+
+[input.keyboard]
+layout = "us,ru"
+options = "grp:win_space_toggle"
+repeat_rate = 25
+repeat_delay = 600
+
+[input.touchpad]
+tap = true
+natural_scroll = true
+
+[input.mouse]
+accel_profile = "flat"
+sensitivity = 0.0
+
+[input.focus]
+follows_mouse = true
+follows_mouse_max_scroll = 0.0
+
+[keybinds]
+# Applications
+"Mod+T" = "spawn:wezterm"
+"Mod+D" = "spawn:vesktop"
+"Mod+E" = "spawn:thunar"
+"Mod+Z" = "spawn:AyuGram"
+"Mod+W" = "spawn:vivaldi"
+"Mod+K" = "spawn:kate"
+"Mod+M" = "spawn:pear-desktop"
+"F10" = "spawn:qalculate-gtk"
+"F11" = "spawn:thunderbird"
+
+# Noctalia shell controls
+"Mod+S" = "spawn:noctalia msg panel-toggle launcher"
+"Mod+C" = "spawn:noctalia msg panel-toggle control-center"
+"F12" = "spawn:noctalia msg panel-toggle session"
+"Super+Alt+L" = "spawn:lock-session-kori"
+
+# Window actions
+"Mod+Escape" = "window-close"
+"Mod+X" = "overview-toggle"
+"Mod+F" = "window-cycle-width"
+"Mod+Shift+F" = "window-toggle-fullscreen"
+"F4" = "window-toggle-fullscreen"
+"Mod+V" = "window-toggle-floating"
+"Mod+Caps_Lock" = "window-toggle-floating"
+"Mod+Space" = "keyboard-layout-next"
+
+# Navigation
+"Mod+Left" = "focus-left"
+"Mod+Right" = "focus-right"
+"Mod+H" = "focus-left"
+"Mod+L" = "focus-right"
+"Mod+J" = "focus-down"
+"Mod+K" = "focus-up"
+
+"Mod+Shift+Left" = "window-move-left"
+"Mod+Shift+Right" = "window-move-right"
+"Mod+Shift+H" = "window-move-left"
+"Mod+Shift+L" = "window-move-right"
+
+# Workspaces
+"Mod+1" = "workspace-1"
+"Mod+2" = "workspace-2"
+"Mod+3" = "workspace-3"
+"Mod+4" = "workspace-4"
+"Mod+5" = "workspace-5"
+"Mod+6" = "workspace-6"
+"Mod+7" = "workspace-7"
+"Mod+8" = "workspace-8"
+"Mod+9" = "workspace-9"
+
+"Mod+Shift+1" = "window-move-to-workspace-1"
+"Mod+Shift+2" = "window-move-to-workspace-2"
+"Mod+Shift+3" = "window-move-to-workspace-3"
+"Mod+Shift+4" = "window-move-to-workspace-4"
+"Mod+Shift+5" = "window-move-to-workspace-5"
+"Mod+Shift+6" = "window-move-to-workspace-6"
+"Mod+Shift+7" = "window-move-to-workspace-7"
+"Mod+Shift+8" = "window-move-to-workspace-8"
+"Mod+Shift+9" = "window-move-to-workspace-9"
+
+# Media keys
+"XF86AudioRaiseVolume" = "spawn:wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ -l 1.0"
+"XF86AudioLowerVolume" = "spawn:wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"
+"XF86AudioMute" = "spawn:wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+"XF86AudioMicMute" = "spawn:wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
+"XF86AudioPlay" = "spawn:playerctl play-pause"
+"XF86AudioNext" = "spawn:playerctl next"
+"XF86AudioPrev" = "spawn:playerctl previous"
+"XF86MonBrightnessUp" = "spawn:brightnessctl --class=backlight set +10%"
+"XF86MonBrightnessDown" = "spawn:brightnessctl --class=backlight set 10%-"
+
+# Window rules for Noctalia
+[[window_rule]]
+match.app_id = "^dev.noctalia.Noctalia$"
+default_floating = true
+default_size = [1020, 900]
+
+[[window_rule]]
+match.app_id = "^dev.noctalia.UmbrielSharePicker$"
+default_floating = true
+default_size = [800, 600]
+
+# Layer rules for Noctalia shell
+[[layer_rule]]
+match.namespace = "^noctalia-(bar-[^\"]+|notification|dock|panel|attached-panel|osd)$"
+blur = true
+blur_ignore_alpha = 0.5
+blur_optimized = false
