@@ -61,7 +61,7 @@ workspace_background = "#00000044"
 
 [layout]
 mode = "scrolling"
-gap = 2
+gap = 8
 width_presets = [0.5, 1.0]
 
 [layout.scrolling]
