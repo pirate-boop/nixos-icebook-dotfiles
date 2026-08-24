@@ -35,13 +35,16 @@ scratchpad_border_unfocused = "#5C4A2AFF"
 outer_border_color = "#1A1A1FFF"
 insert_hint_color = "#7FC8FF80"
 backdrop_color = "#000000FF"
-animation_ms = 200             
+animation_ms = 200
 
 [appearance.blur]
 enabled = true
 optimized = true
 passes = 3
 radius = 5
+noise = 0.02
+brightness = 0.9
+contrast = 0.9
 saturation = 2.0
 
 [appearance.shadow]
