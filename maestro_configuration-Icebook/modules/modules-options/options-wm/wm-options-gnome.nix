@@ -3,8 +3,9 @@
 {
   # Display manager and GNOME desktop module
   services.xserver.enable = true;
-  services.xserver.displayManager.gdm.enable = true;
+  #services.xserver.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
+  services.displayManager.gdm.enable = true;
 
   # Optional key management GUI
   programs.seahorse.enable = true;
