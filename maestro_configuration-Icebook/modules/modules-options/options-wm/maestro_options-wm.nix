@@ -9,5 +9,6 @@
     #./wm-options-hyprland.nix
     #./wm-options-mango.nix
     ./wm-options-noctalia-shell.nix
+    ./wm-options-gnome.nix
   ];
 }
