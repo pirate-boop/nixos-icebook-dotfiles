@@ -24,7 +24,9 @@
   # Essential tweak tools and extensions
   environment.systemPackages = with pkgs; [
     gnome-tweaks
+    gnome-extension-manager
     dconf-editor
+    gnome-control-center
     
     # Extensions for tiling & canvas hybrid workflow
     gnomeExtensions.arcmenu
