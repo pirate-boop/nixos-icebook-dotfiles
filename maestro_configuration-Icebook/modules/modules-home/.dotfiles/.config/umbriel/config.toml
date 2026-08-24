@@ -126,8 +126,8 @@ follows_mouse_max_scroll = 0.0
 "Mod+Space" = "keyboard-layout-next"
 
 # ---Windows Navigation---
-"Mod+Left" = "focus-left"
-"Mod+Right" = "focus-right"
+"Mod+Left" = "window-focus-left"
+"Mod+Right" = "window-focus-right"
 "Mod+Up" = "window-focus-up"
 "Mod+Down" = "window-focus-down"
 
