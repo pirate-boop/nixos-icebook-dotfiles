@@ -12,7 +12,7 @@
     # mullvad-vpn      # Mullvad
     linux-wifi-hotspot
     daed
-    flclashx
+    #flclashx
   ];
 
   # Automatic download and linking of geodatabases for dead
