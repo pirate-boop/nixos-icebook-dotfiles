@@ -65,7 +65,8 @@ gap = 8
 width_presets = [0.5, 1.0]
 
 [layout.scrolling]
-default_width_fraction = 1.0
+direction = "horizontal"
+default_width_fraction = 0.5
 center_underfull_strip = true
 
 [input]
