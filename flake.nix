@@ -27,6 +27,7 @@
     vivaldi             = { url = "github:Hy4ri/vivaldi-snapshot-flake"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
     flclashx            = { url = "github:pirate-boop/flclashx-flake"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
     driftwm             = { url = "github:malbiruk/driftwm"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
+    halley              = { url = "github:binarylinuxx/halley-flake"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
   };
 
   outputs = inputs@{ flake-parts, ... }:
