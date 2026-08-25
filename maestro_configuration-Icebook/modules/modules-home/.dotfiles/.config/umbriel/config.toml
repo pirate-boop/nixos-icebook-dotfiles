@@ -126,10 +126,13 @@ follows_mouse_max_scroll = 0.0
 "Mod+Space" = "keyboard-layout-next"
 
 # ---Windows Navigation---
+
+# Switch to previous/next window
 "Mod+Left" = "window-focus-left"
 "Mod+Right" = "window-focus-right"
-"Mod+Up" = "window-focus-up"
-"Mod+Down" = "window-focus-down"
+# Switch to previous/next workspace
+"Mod+Up" = "workspace-previous"
+"Mod+Down" = "workspace-next"
 
 #"Mod+H" = "window-focus-left"
 #"Mod+L" = "window-focus-right"
@@ -181,8 +184,8 @@ follows_mouse_max_scroll = 0.0
 "XF86MonBrightnessDown" = "spawn:brightnessctl --class=backlight set 10%-"
 
 # ---Screenshots toggles---
-"Print" = "spawn:noctalia msg screenshot-region" # Screenshot selected region
-"Shift+Print" = "spawn:noctalia msg screenshot-fullscreen" # Screenshot full screen
+"Shift+Print" = "spawn:noctalia msg screenshot-region" # Screenshot selected region
+"Print" = "spawn:noctalia msg screenshot-fullscreen" # Screenshot full screen
 
 # ---Window rules for Noctalia---
 [[window_rule]]
