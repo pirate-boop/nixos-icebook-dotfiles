@@ -1,64 +1,44 @@
-#****************************************************************#
-# |============================================================| #
-# |AMD — Ryzen 7 8845HS + Radeon 780M (RDNA3)                 | #
-# |============================================================| #
-#  Драйвер: amdgpu (open source, встроен в ядро)               #
-#  OpenCL: через ROCm (для compute задач)                       #
-#  VA-API: radeonsi (аппаратное декодирование видео)            #
-#  Микрокод: обновляется автоматически                          #
-#****************************************************************#
 { pkgs, ... }: {
 
-  services.xserver.videoDrivers = [ "amdgpu" ];
-
+  # Early AMDGPU loading for proper KMS and Wayland initialization
   hardware.amdgpu = {
-    initrd.enable    = true;   # ранняя загрузка amdgpu в initrd
-    opencl.enable    = true;   # OpenCL через ROCm (GPGPU, стриминг)
-    # amdvlk.enable    = false;  # false = используем radv (mesa) — стабильнее
+    initrd.enable = true;
   };
 
+  # Graphics stack (Modern module for NixOS 26.05)
   hardware.graphics = {
-    enable      = true;
-    enable32Bit = true;        # Steam / Wine / Proton
+    enable = true;
+    enable32Bit = true; # Crucial for Steam, Proton, and Wine
+
     extraPackages = with pkgs; [
-      rocmPackages.clr          # OpenCL runtime
-      libvdpau-va-gl            # VDPAU через VA-API
-      libva-vdpau-driver
+      rocmPackages.clr # OpenCL runtime for compute tasks
     ];
-    extraPackages32 = with pkgs.pkgsi686Linux; [
-      libva
-    ];
+    
+    # Note: Native VA-API for RDNA3 (Radeon 780M) is provided automatically 
+    # by Mesa (radeonsi). Legacy VDPAU wrappers are intentionally omitted.
   };
 
-  # Microcode CPU
+  # CPU Microcode updates
   hardware.cpu.amd.updateMicrocode = true;
-  # RDNA3 tweaks
+
+  # Kernel parameters
   boot.kernelParams = [
-    "amdgpu.dcdebugmask=0x40010"
-    "amdgpu.gttsize=8192" # больше shared memory под iGPU
-    "threadirqs" # чуть лучше latency/input responsiveness
+    "threadirqs" # Improves system responsiveness and input latency
+    # "amdgpu.dcdebugmask=0x40010" # Uncomment ONLY if experiencing screen flickering
   ];
 
-  # Mesa / RADV env vars
+  # Environment variables
   environment.variables = {
-
-    # async shader compilation
-    RADV_PERFTEST = "gpl,nggc";
-
-    # Wayland
-    MOZ_ENABLE_WAYLAND = "1";
-
-    # Vulkan shader cache
-    AMD_VULKAN_ICD = "RADV";
+    MOZ_ENABLE_WAYLAND = "1"; # Native Wayland support for Firefox/Thunderbird
   };
 
-  # Управление питанием (Zen4 — amd-pstate активный режим)
-  powerManagement.enable       = true;
-  powerManagement.cpuFreqGovernor = "schedutil";
+  # Power management
+  # Note: Manual cpuFreqGovernor is removed to prevent conflicts with PPD.
+  # On Zen 4 (Ryzen 7 8845HS), power-profiles-daemon dynamically manages 
+  # amd-pstate (active mode) and EPP profiles via D-Bus.
   services.power-profiles-daemon.enable = true;
-  # services.lact.enable = true;
+
+  # Boot modules
   boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "usb_storage" "sd_mod" ];
-  boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-amd" ];
-  boot.extraModulePackages = [ ];
 }

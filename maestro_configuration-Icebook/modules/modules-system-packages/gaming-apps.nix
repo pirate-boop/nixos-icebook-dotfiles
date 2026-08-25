@@ -18,6 +18,7 @@
     # ''; 
     #})
     heroic             # Epic / GOG
+    faugus-launcher
     bottles
     #brotato
     factorio-demo
