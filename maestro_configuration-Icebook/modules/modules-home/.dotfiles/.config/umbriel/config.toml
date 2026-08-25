@@ -123,7 +123,7 @@ follows_mouse_max_scroll = 0.0
 "F4" = "window-toggle-fullscreen"
 "Mod+V" = "window-toggle-floating"
 "Mod+Caps_Lock" = "window-toggle-floating"
-"Mod+Space" = "keyboard-layout-next"
+#"Mod+Space" = "keyboard-layout-next"
 
 # ---Windows Navigation---
 
