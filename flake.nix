@@ -30,6 +30,7 @@
     halley              = { url = "github:binarylinuxx/halley-flake"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
     umbriel             = { url = "git+https://github.com/noctalia-dev/umbriel"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
     xdg-desktop-portal-umbriel = { url = "github:noctalia-dev/xdg-desktop-portal-umbriel"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
+    noutube             = { url = "github:pirate-boop/NouTube-Desktop-flake"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
   };
 
   outputs = inputs@{ flake-parts, ... }:

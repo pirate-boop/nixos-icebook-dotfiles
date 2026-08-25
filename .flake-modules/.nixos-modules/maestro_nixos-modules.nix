@@ -6,5 +6,6 @@
     ./home-manager.nix
     ./vivaldi-snapshot.nix
     #./flclashx.nix
+    ./noutube-overlay.nix
   ];
 }

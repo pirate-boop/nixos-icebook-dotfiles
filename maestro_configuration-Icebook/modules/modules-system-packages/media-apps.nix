@@ -16,7 +16,7 @@
     amberol
     #komikku
     #mangayomi
-    
+    noutube
     # ── Загрузка ──────────────────────────────────
     yt-dlp            # скачать видео/аудио с YouTube и др.
     aria2             # мощный мультипротокольный downloader

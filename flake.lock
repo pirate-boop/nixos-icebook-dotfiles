@@ -877,6 +877,26 @@
         "type": "github"
       }
     },
+    "noutube": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs-unstable"
+        ]
+      },
+      "locked": {
+        "lastModified": 1787627495,
+        "narHash": "sha256-yFO4qY/zg0hu9+1lNF9IgL4/zzetCDbjqpQciL6nzKc=",
+        "owner": "pirate-boop",
+        "repo": "NouTube-Desktop-flake",
+        "rev": "1af48687114ceaaa342baf5b3836ee7d050b3f0c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pirate-boop",
+        "repo": "NouTube-Desktop-flake",
+        "type": "github"
+      }
+    },
     "nur": {
       "inputs": {
         "flake-parts": "flake-parts_5",
@@ -918,6 +938,7 @@
         "nixpkgs-unstable": "nixpkgs-unstable",
         "noctalia": "noctalia",
         "noctalia-greeter": "noctalia-greeter",
+        "noutube": "noutube",
         "nur": "nur",
         "scrcpy-gui": "scrcpy-gui",
         "ttt": "ttt",
