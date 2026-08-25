@@ -1,5 +1,5 @@
 { ... }: {
   imports = [
-    #./options-steam.nix
+    ./options-steam.nix
   ];
 }
