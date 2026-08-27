@@ -21,16 +21,17 @@
     ttt                 = { url = "github:eugenioenko/ttt"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
     bun2nix             = { url = "github:nix-community/bun2nix"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };              
     #ayugram-desktop    = { url = "github:ndfined-crp/ayugram-desktop"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
-    mangowm             = { url = "github:mangowm/mango"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
-    dms                 = { url = "github:AvengeMedia/DankMaterialShell/stable"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
-    nix-software-center = { url = "git+https://git.oss.uzinfocom.uz/xinux/software-center"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
-    vivaldi             = { url = "github:Hy4ri/vivaldi-snapshot-flake"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
+    #mangowm             = { url = "github:mangowm/mango"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
+    #dms                 = { url = "github:AvengeMedia/DankMaterialShell/stable"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
+    #nix-software-center = { url = "git+https://git.oss.uzinfocom.uz/xinux/software-center"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
+    #vivaldi             = { url = "github:Hy4ri/vivaldi-snapshot-flake"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
     flclashx            = { url = "github:pirate-boop/flclashx-flake"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
-    driftwm             = { url = "github:malbiruk/driftwm"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
-    halley              = { url = "github:binarylinuxx/halley-flake"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
+    #driftwm             = { url = "github:malbiruk/driftwm"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
+    #halley              = { url = "github:binarylinuxx/halley-flake"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
     umbriel             = { url = "git+https://github.com/noctalia-dev/umbriel"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
     xdg-desktop-portal-umbriel = { url = "github:noctalia-dev/xdg-desktop-portal-umbriel"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
     noutube             = { url = "github:pirate-boop/NouTube-Desktop-flake"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
+    proton-flavors      = { url = "github:pirate-boop/proton-flavors-flake"; inputs.nixpkgs.follows = "nixpkgs"; };
   };
 
   outputs = inputs@{ flake-parts, ... }:

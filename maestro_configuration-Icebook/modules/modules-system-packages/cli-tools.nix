@@ -37,7 +37,8 @@
     xxd
     parted
     gparted
-    kdePackages.partitionmanager
-    gnome-disk-utility
+    #kdePackages.partitionmanager
+    #gnome-disk-utility
+    python3
   ];
 }
