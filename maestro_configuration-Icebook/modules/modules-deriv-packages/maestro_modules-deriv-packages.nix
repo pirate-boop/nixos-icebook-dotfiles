@@ -5,8 +5,7 @@
     #./fptn-vpn-gui.nix
   ];
   environment.systemPackages = [
-    # Вызываем наш файл как функцию, передавая ему pkgs
-    (pkgs.callPackage ./lfff-gui.nix { })
+    #(pkgs.callPackage ./lfff-gui.nix { })
     #(pkgs.callPackage ./helium-browser.nix { })
     #(pkgs.callPackage ./fptn-vpn-gui.nix { })
     

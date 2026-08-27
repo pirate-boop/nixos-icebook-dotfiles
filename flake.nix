@@ -12,7 +12,6 @@
     zen-browser         = { url = "github:youwen5/zen-browser-flake"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
     nirimod             = { url = "github:srinivasr/nirimod"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
     # sysc-greet          = { url = "github:Nomadcxx/sysc-greet"; inputs.nixpkgs.follows = "nixpkgs"; };
-    lfff                = { url = "github:mrFrok/LibreFastbootFirmwareFlasher"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
     waydroid-script     = { url = "github:casualsnek/waydroid_script"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
     anime-cursors       = { url = "github:pirate-boop/anime-cursors"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
     scrcpy-gui          = { url = "github:kil0bit-kb/scrcpy-gui"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
@@ -31,7 +30,8 @@
     umbriel             = { url = "git+https://github.com/noctalia-dev/umbriel"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
     xdg-desktop-portal-umbriel = { url = "github:noctalia-dev/xdg-desktop-portal-umbriel"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
     noutube             = { url = "github:pirate-boop/NouTube-Desktop-flake"; inputs.nixpkgs.follows = "nixpkgs-unstable";  };
-    proton-flavors      = { url = "github:pirate-boop/proton-flavors-flake"; inputs.nixpkgs.follows = "nixpkgs"; };
+    proton-flavors      = { url = "github:pirate-boop/proton-flavors-flake"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
+    lfff                = { url = "github:mrFrok/LibreFastbootFirmwareFlasher"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
   };
 
   outputs = inputs@{ flake-parts, ... }:

@@ -4,6 +4,7 @@
     ./scrcpy-gui.nix
     ./ttt.nix
     ./zen-browser.nix
-    ./nix-software-center.nix
+    #./nix-software-center.nix
+    ./lfff.nix
   ];
 }
