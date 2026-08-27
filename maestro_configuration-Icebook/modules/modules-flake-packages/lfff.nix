@@ -1,6 +1,6 @@
 { inputs, pkgs, ... }: {
   environment.systemPackages = [
-    inputs.lfff.packages.${pkgs.system}.default  
-    inputs.lfff.packages.${pkgs.system}.lfff-cli
+    inputs.lfff.packages.${stdenv.hostPlatform.system}.default  
+    inputs.lfff.packages.${stdenv.hostPlatform.system}.lfff-cli
   ];
 }
