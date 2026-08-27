@@ -1,6 +1,6 @@
 { inputs, ... }: {
   imports = [
-    inputs.driftwm.nixosModules.default
+    #inputs.driftwm.nixosModules.default
     #./wm-options-driftwm.nix
     ./wm-options-niri.nix
     #inputs.halley.nixosModules.default

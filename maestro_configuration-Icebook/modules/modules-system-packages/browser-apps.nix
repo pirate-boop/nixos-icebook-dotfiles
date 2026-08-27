@@ -3,14 +3,14 @@
     # ── Основной браузер ──────────────────────────    
     #vivaldi
     #vivaldi-ffmpeg-codecs  # для видео на YouTube и прочих сайтах
-    vivaldi-snapshot
+    #vivaldi-snapshot
     # google-chrome              # основной (allowUnfree = true)
-    floorp-bin
+    #floorp-bin
     #orion-browser
-    firefox
+    #firefox
     # ── Резерв ────────────────────────────────────
     # firefox                    # когда Chrome тупит
     # chromium                   # тест / без Google services
-    brave
+    #brave
   ];
 }
