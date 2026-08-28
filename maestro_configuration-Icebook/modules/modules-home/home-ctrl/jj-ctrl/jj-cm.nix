@@ -10,7 +10,7 @@
           H=$($J diff --git | sync-hash)
           $J commit -m "sync-$H"
         else
-          echo "нечего коммитить"
+          echo "Nothing to commit"
         fi
       '';
     })

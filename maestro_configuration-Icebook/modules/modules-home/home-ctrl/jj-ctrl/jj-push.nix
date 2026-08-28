@@ -4,7 +4,7 @@
       name = "jj-push";
       runtimeInputs = [ pkgs.jujutsu pkgs.git ];
       text = ''
-        ${pkgs.jujutsu}/bin/jj git push -b main
+        ${pkgs.jujutsu}/bin/jj git push --remote tangled
       '';
     })
   ];
